@@ -5,10 +5,10 @@ using UnityEngine;
 // Scavenger Lite
 public class ObjectPooler : MonoBehaviour
 {
-    public static ObjectPooler SharedInstance;
-    public List<GameObject> pooledMissiles;
-    public GameObject missileToPool;
-    public int amountToPool;
+    [SerializeField] public static ObjectPooler SharedInstance;
+    [SerializeField] public List<GameObject> pooledMissiles;
+    [SerializeField] public GameObject missileToPool;
+    [SerializeField] public int amountToPool;
 
     private GameObject missile;
 
@@ -20,7 +20,12 @@ public class ObjectPooler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Loop through list of pooled objects,deactivating them and adding them to the list 
+        InitializeObjects();
+    }
+
+    void InitializeObjects()
+    {
+        // Loop through list of pooled objects, deactivating them and adding them to the list 
         pooledMissiles = new List<GameObject>();
         for (int i = 0; i < amountToPool; i++)
         {

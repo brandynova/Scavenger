@@ -27,13 +27,13 @@ public class SpawnManager : MonoBehaviour
 
     public void SpawnObjects()
     {
-        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty;
         StartCoroutine(SpawnRandomAsteroid());
     }
 
     
     IEnumerator SpawnRandomAsteroid()
     {
+        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty;
         while (gameManager.isGameActive && !gameManager.isPaused)
         {
             yield return new WaitForSeconds(asteroidSpawnRate);
@@ -57,12 +57,12 @@ public class SpawnManager : MonoBehaviour
     // Generate one or more minerals when an asteroid is destroyed by a missile
     public void GenerateMinerals(Vector3 position)
     {
-        int amountToSpawn = Random.Range(0,gameManager.spawnMax);
+        int amountToSpawn = Random.Range(0, gameManager.spawnMaxMinerals);
         for (int i = 0; i < amountToSpawn; i++)
         {
             int randomIndex = Random.Range(0, minerals.Length);
 
-            float xPos = position.x + (float)i + 1f;
+            float xPos = position.x + (float)i + 1.0f;
             Vector3 spawnPos = new Vector3(xPos, position.y, position.z);
 
             Instantiate(minerals[randomIndex], spawnPos, minerals[randomIndex].transform.rotation);

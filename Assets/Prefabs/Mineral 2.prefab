@@ -113,10 +113,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnManager: {fileID: 0}
+  gameManager: {fileID: 0}
   destructionVFX: {fileID: 0}
   rotateSpeed: 10
   speed: 10
-  scoreValue: 2
+  creditValue: 2
 --- !u!54 &1808887453440341642
 Rigidbody:
   m_ObjectHideFlags: 0

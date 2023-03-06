@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] SpawnManager spawnManager;
 
-    [SerializeField] TextMeshProUGUI scoreText;
+    [SerializeField] TextMeshProUGUI creditsText;
     [SerializeField] TextMeshProUGUI shieldsText;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] TextMeshProUGUI greenText;
@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] public int enhancePrice;
     [SerializeField] public int difficulty;
     [SerializeField] public int destructionTime;
-    [SerializeField] public int spawnMax;
+    [SerializeField] public int spawnMaxMinerals;
     [SerializeField] public bool isGameActive;
     [SerializeField] public bool isPaused;
     [SerializeField] public bool isEndWave;
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     private GameObject playerVFX;
 
     private AudioSource gameAudio;
-    private AudioSource gameMusic;
+    //private AudioSource gameMusic;
     private AudioSource engineAudio;
     
     //[SerializeField] public AudioClip menuSFX;
@@ -71,7 +71,6 @@ public class GameManager : MonoBehaviour
     
     private Vector3 startPosition = new Vector3 (0f, -20f, 0f);
 
-    private float fadeTime = 2f;
     private float waveInterval;
     private float waveTimer;
     private float currentAlpha;
@@ -88,10 +87,12 @@ public class GameManager : MonoBehaviour
     private int numBlue;
     private int numRed;
     private int numYellow;
-    private int score;
+    private int credits;
     private int waveNumber;
 
-    private bool doFade;
+    
+    private float fadeTime = 2f;
+    private bool isTitleScreenFade;
 
 
     // Start is called before the first frame update
@@ -105,6 +106,7 @@ public class GameManager : MonoBehaviour
 
         player = GameObject.Find("Player");
         player.SetActive(true);
+        isTitleScreenFade = false;
 
         //gameMusic.Play();
         engineAudio.Play();
@@ -124,7 +126,6 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         isPaused = false;
         isEndWave = false;
-        doFade = false;
         waveInterval = waveBaseInterval;
         waveTimer = waveInterval;        
     }
@@ -135,33 +136,46 @@ public class GameManager : MonoBehaviour
          //Check if the Pause key is pressed (escape) 
          if (Input.GetKeyDown(KeyCode.Escape) && isGameActive)
          {
-            isPaused = !isPaused;
-            PauseGame();
+            PauseController();
          }   
          // Process wave timer
          if (!isEndWave && !isPaused && isGameActive)
          {
             ProcessWaveTimer();
          }
-
          // Check if the title screen is being faded out (start of game only)
-         if (doFade)
+         if (isTitleScreenFade)
          {
-            Time.timeScale = 1;
-            currentAlpha = Mathf.MoveTowards(currentAlpha, desiredAlpha, fadeTime * Time.deltaTime);
-            screenCanvas.alpha = currentAlpha;
-            if(currentAlpha == desiredAlpha)
-            { 
-                doFade = false;  
-                StartGame();
-            }
+            FadeTitleScreen();
          }
-
     }
+
+    // This is called from the DifficultyControl script, once the player selects a difficulty level
+    public void StartFadeTitle(int playerDifficulty)
+    {
+        difficulty = playerDifficulty;
+        isTitleScreenFade = true;
+        currentAlpha = 1f;
+        desiredAlpha = 0f;
+        screenCanvas = titleScreen.GetComponent<CanvasGroup>();
+    }
+    
+    void FadeTitleScreen()
+    {
+        Time.timeScale = 1;
+        currentAlpha = Mathf.MoveTowards(currentAlpha, desiredAlpha, fadeTime * Time.deltaTime);
+        screenCanvas.alpha = currentAlpha;
+        if (currentAlpha == desiredAlpha)
+        { 
+            isTitleScreenFade = false;  
+            StartGame();
+        }
+    }
+
 
     public void StartGame()
     {
-        score = 0;
+        credits = 0;
         numGreen = -1;
         numPurple = -1;
         numBlue = -1;
@@ -181,9 +195,9 @@ public class GameManager : MonoBehaviour
         isGameActive = true;
         player.SetActive(true);
 
-        UpdateScore(0);
-        InitiateMinerals();
-        spawnMax = (int) Mathf.Round((numMinerals + 1)/difficulty);
+        UpdateCredits(0);
+        InitializeMinerals();
+        spawnMaxMinerals = (int) Mathf.Round((numMinerals + 1)/difficulty);
 
         shieldHealth = maxDifficulty - difficulty + 1; // Shields can vary from 1 - 3 based on difficulty
         shieldSlider.maxValue = shieldHealth;
@@ -197,24 +211,16 @@ public class GameManager : MonoBehaviour
         
         purchaseRepairs = repairPrice * difficulty;
         purchaseEnhance = enhancePrice * difficulty;
-        
+                
         DisplayWaveTimer();
 
         spawnManager.SpawnObjects();
     }
 
-    // Difficulty is set in the DifficultyControl script.  Start fading out the title screen
-    public void StartFadeTitle(int userDifficulty)
-    {
-        difficulty = userDifficulty;
-        
-        doFade = true;
-        currentAlpha = 1f;
-        desiredAlpha = 0f;
-        screenCanvas = titleScreen.GetComponent<CanvasGroup>();
-    }
 
-    void InitiateMinerals()
+    
+    // *********************** MINERAL CONTROL *******************************
+    void InitializeMinerals()
     {
         for (int i = 1; i <= numMinerals; ++i)
         {
@@ -222,6 +228,8 @@ public class GameManager : MonoBehaviour
         }
     }
     
+
+    // *********************** WAVE CONTROL *******************************
     void ProcessWaveTimer()
     {
 
@@ -307,10 +315,31 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // From Continue button click on Shipyard
+    public void ContinueNextWave()
+    {
+        Time.timeScale = 1;
+
+        //gameMusic.Play();
+        engineAudio.Play();
+        
+        isEndWave = false;
+        shipyardScreen.SetActive(false);
+        statusScreen.gameObject.SetActive(true);
+
+        player.SetActive(true);
+    }
+
+    
+    // *********************** END WAVE CONTROL *******************************
+
+
+    
+    // *********************** SHIPYARD *******************************
 
     public void ShipyardRepairs()
     {
-        shipyardCreditsText.text = "Available Credits: " + score;
+        shipyardCreditsText.text = "Available Credits: " + credits;
         shipyardMaxShieldsText.text = "Maxium Level: " + shieldSlider.maxValue * 100;
         shipyardCurrShieldsText.text = "Current Level: " + shieldHealth * 100;
         shipyardSlider.value = shieldHealth;
@@ -318,7 +347,7 @@ public class GameManager : MonoBehaviour
         repairText.text = purchaseRepairs + " Credits";
         enhanceText.text = purchaseEnhance + " Credits";
 
-        if (purchaseRepairs <= score && shieldHealth < shieldSlider.maxValue)
+        if (purchaseRepairs <= credits && shieldHealth < shieldSlider.maxValue)
         {
             repairButton.interactable = true;
             repairText.alpha = 1f;
@@ -330,7 +359,7 @@ public class GameManager : MonoBehaviour
             repairText.alpha = .4f;
         }
         
-        if (purchaseEnhance <= score)
+        if (purchaseEnhance <= credits)
         {
             enhanceButton.interactable = true;
             enhanceText.alpha = 1f;
@@ -349,7 +378,7 @@ public class GameManager : MonoBehaviour
     {
         ++shieldHealth;
         
-        UpdateScore(-purchaseRepairs);
+        UpdateCredits(-purchaseRepairs);
         UpdateShields();
         ShipyardRepairs();
     }
@@ -360,36 +389,26 @@ public class GameManager : MonoBehaviour
         ++shieldSlider.maxValue;
         ++shipyardSlider.maxValue;
 
-        UpdateScore(-purchaseEnhance);
+        UpdateCredits(-purchaseEnhance);
         UpdateShields();
         ShipyardRepairs();
     }
+    
+    // *********************** END SHIPYARD *******************************
 
-    public void ContinueNextWave()
-    {
-        Time.timeScale = 1;
+    
+    // *********************** STATUS CONTROL *******************************
 
-        //gameMusic.Play();
-        engineAudio.Play();
-        
-        isEndWave = false;
-        shipyardScreen.SetActive(false);
-        statusScreen.gameObject.SetActive(true);
-
-        player.SetActive(true);
-    }
-
-
-    public void UpdateScore(int addToScore)
+    public void UpdateCredits(int addToCredits)
     {
         if(isGameActive || isEndWave)
         {
-            if (addToScore > 0)
+            if (addToCredits > 0)
             {
-                addToScore += (difficulty - 1);
+                addToCredits += (difficulty - 1);
             }
-            score += addToScore;
-            scoreText.text = "Credits: " + score;
+            credits += addToCredits;
+            creditsText.text = "Credits: " + credits;
         }
     }
 
@@ -433,8 +452,9 @@ public class GameManager : MonoBehaviour
     }
 
 
-    void PauseGame ()
+    void PauseController ()
     {
+        isPaused = !isPaused;
         if (isPaused)
         {
             Time.timeScale = 0;
@@ -478,8 +498,8 @@ public class GameManager : MonoBehaviour
         //gameMusic.Play();
         gameOverScreen.gameObject.SetActive(true);  
 
-        //Debug.Log("FINAL:  Minerals (" + numGreen + ", " + numPurple + ", " + numBlue + ", " + numRed + ", " + numYellow + ") \n Difficulty: " + difficulty + ".  Credits: " + score);
-        finalScore = (numGreen + numPurple*2 + numBlue*3 + numRed*4 + numYellow*5 + waveNumber)*difficulty + score;
+        //Debug.Log("FINAL:  Minerals (" + numGreen + ", " + numPurple + ", " + numBlue + ", " + numRed + ", " + numYellow + ") \n Difficulty: " + difficulty + ".  Credits: " + credits);
+        finalScore = (numGreen + numPurple*2 + numBlue*3 + numRed*4 + numYellow*5 + waveNumber)*difficulty + credits;
         finalScoreText.text = "Final Score: " + finalScore;
         
         isGameActive = false;

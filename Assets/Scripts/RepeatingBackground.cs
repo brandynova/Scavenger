@@ -16,7 +16,8 @@ public class RepeatingBackground : MonoBehaviour
 
     private void Update()
     {        
-        if (transform.position.y < -verticalLimit && gameManager.isGameActive && !gameManager.isPaused) //if sprite goes down below the viewport move the object up above the viewport
+        //if background goes down below the viewport, move up above the viewport
+        if (transform.position.y < -verticalLimit && gameManager.isGameActive && !gameManager.isPaused) 
         {
             RepositionBackground();
         }

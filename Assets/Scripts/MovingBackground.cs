@@ -17,10 +17,14 @@ public class MovingBackground : MonoBehaviour
     //moving the background stars with the defined speed
     private void Update()
     {
+        UpdateBackgroundPosition();
+    }
+
+    void UpdateBackgroundPosition()
+    {
         if (gameManager.isGameActive && !gameManager.isPaused)
         {
             transform.Translate(Vector3.forward * speed * Time.deltaTime); 
         }
     }
-
 }

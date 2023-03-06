@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] public GameObject destructionVFX;
     [SerializeField] public GameObject hitVFX;
     [SerializeField] public GameObject shipGun;
+    [SerializeField] public float destructionTime;
 
     private ParticleSystem shipGunVFX;
     private AudioSource gameAudio;
@@ -23,7 +24,6 @@ public class PlayerController : MonoBehaviour
     private float xBounds = 30f;
     private float yOffset = 1.1f;
 
-    public float destructionTime;
 
     // Start is called before the first frame update
     void Start()
@@ -91,25 +91,25 @@ public class PlayerController : MonoBehaviour
         else if(other.gameObject.CompareTag("Asteroid"))
         {
             Destroy(other.gameObject);
-            PlayerHit();
+            HitPlayer();
         }
     }
 
-    // Destroy the mineral and increment score - the mineral's score value is also the index to the mineral
+    // Destroy the mineral and increment credits - the mineral's credit value is also the index to the mineral
     void CollectMineral(GameObject mineral)
     {
-            int addToScore = mineral.GetComponent<ObjectBehaviour>().scoreValue;
+            int addToCredits = mineral.GetComponent<ObjectBehaviour>().creditValue;
     
             gameAudio.PlayOneShot(gameManager.collectMineralSFX, 1.0f);
 
-            gameManager.UpdateScore(addToScore);
-            gameManager.UpdateMineralCount(addToScore); 
+            gameManager.UpdateCredits(addToCredits);
+            gameManager.UpdateMineralCount(addToCredits); 
 
             Destroy(mineral); 
     }
     
     // Destroy the player if health is down to 1.  Otherwise reduce shields and keep playing.
-    void PlayerHit()                           
+    void HitPlayer()                           
     {   
         if (gameManager.shieldHealth == 1)
         {

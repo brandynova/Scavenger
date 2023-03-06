@@ -4791,7 +4791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnManager: {fileID: 1787869572}
-  scoreText: {fileID: 1617576421}
+  creditsText: {fileID: 1617576421}
   shieldsText: {fileID: 14642426}
   timerText: {fileID: 1798468318}
   greenText: {fileID: 2132993121}
@@ -4823,12 +4823,12 @@ MonoBehaviour:
   enhancePrice: 20
   difficulty: 0
   destructionTime: 2
-  spawnMax: 0
+  spawnMaxMinerals: 0
   isGameActive: 0
   isPaused: 0
   isEndWave: 0
   engineSFX: {fileID: 8300000, guid: c59eac9217201064da3371e9226df944, type: 3}
-  launchMissileSFX: {fileID: 8300000, guid: 0151a389783b1fc498c7badeb0de0023, type: 3}
+  launchMissileSFX: {fileID: 8300000, guid: d63ac8e49f199e64e8c62290206a53aa, type: 3}
   hitPlayerSFX: {fileID: 8300000, guid: 9c87f285d32fa4569b77ddf3a7e6df5e, type: 3}
   destroyPlayerSFX: {fileID: 8300000, guid: 05e80027c83f4bd42b9791db3b9e7652, type: 3}
   collectMineralSFX: {fileID: 8300000, guid: 67e207f22b4f20b4283c53e2b7178de3, type: 3}
@@ -5506,6 +5506,7 @@ GameObject:
   - component: {fileID: 1206619310}
   - component: {fileID: 1206619309}
   - component: {fileID: 1206619311}
+  - component: {fileID: 1206619312}
   m_Layer: 5
   m_Name: Title Screen
   m_TagString: Untagged
@@ -5589,6 +5590,18 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
+--- !u!114 &1206619312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1206619307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc4f1094fad1f0f4a9403a58def86bb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1214820642
 GameObject:
   m_ObjectHideFlags: 0
@@ -8394,7 +8407,7 @@ GameObject:
   - component: {fileID: 1617576422}
   - component: {fileID: 1617576421}
   m_Layer: 5
-  m_Name: Score Text
+  m_Name: Credits Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11232,7 +11245,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Zanderic Games
+  m_text: 'Zanderic Games '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 570821af6fea44af1be9861c4a496950, type: 2}
   m_sharedMaterial: {fileID: 21855137469139786, guid: 570821af6fea44af1be9861c4a496950, type: 2}
@@ -11451,7 +11464,7 @@ GameObject:
   - component: {fileID: 2120129318}
   - component: {fileID: 2120129317}
   m_Layer: 5
-  m_Name: Credit Text
+  m_Name: Credits Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

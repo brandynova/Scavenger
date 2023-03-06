@@ -5,8 +5,6 @@ using UnityEngine;
 // Scavenger Lite
 public class ObjectBehaviour : MonoBehaviour
 {
-    private Rigidbody objectRb;
-
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameManager gameManager;
 
@@ -14,8 +12,9 @@ public class ObjectBehaviour : MonoBehaviour
 
     [SerializeField] public float rotateSpeed;
     [SerializeField] public float speed;
-    [SerializeField] public int scoreValue;
+    [SerializeField] public int creditValue;
     
+    private Rigidbody objectRb;
     private AudioSource gameAudio;
     private float yBounds = -40f;
 
@@ -33,8 +32,8 @@ public class ObjectBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(Time.deltaTime*rotateSpeed, Time.deltaTime*rotateSpeed, Time.deltaTime*rotateSpeed);
-        CheckBoundary();
+        UpdateObjectPosition();
+        CheckObjectBoundary();
     }
 
     // Set the speed of the object based on the difficulty selected by the user
@@ -43,17 +42,21 @@ public class ObjectBehaviour : MonoBehaviour
         float objectSpeed = speed + gameManager.difficulty * (gameManager.difficulty + 1);
         objectRb.velocity = new Vector3(0, -objectSpeed, 0); 
     }
+    
+    void UpdateObjectPosition()
+    {
+        transform.Rotate(Time.deltaTime*rotateSpeed, Time.deltaTime*rotateSpeed, Time.deltaTime*rotateSpeed);
+    }
 
-
-    void CheckBoundary()
+    void CheckObjectBoundary()
     {
         // Destroy the object if it travels outside the game boundary.  Deduct the score value of the object from the total score when playing on HARD difficulty
         if (transform.position.y < yBounds)
         {
             if (gameManager.difficulty == 3) 
             {
-                int deductScore = -gameObject.GetComponent<ObjectBehaviour>().scoreValue;
-                gameManager.UpdateScore(deductScore);
+                int deductCredits = -gameObject.GetComponent<ObjectBehaviour>().creditValue;
+                gameManager.UpdateCredits(deductCredits);
             }
             Destroy(gameObject);
         }

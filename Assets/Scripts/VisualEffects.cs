@@ -7,14 +7,14 @@ using UnityEngine;
 public class VisualEffects : MonoBehaviour {
 
     // the time after object will be destroyed
-    public float destructionTime;
+    [SerializeField] public float destructionTime;
 
     private void OnEnable()
     {
-        StartCoroutine(Destruction()); //launching the timer of destruction
+        StartCoroutine(Destruction()); //launch the timer of destruction
     }
 
-    IEnumerator Destruction() //wait for the estimated time, and destroying or deactivating the object
+    IEnumerator Destruction() // Wait the specified time for the explosion to play, then destroy or deactivate the explosion particle. 
     {
         yield return new WaitForSeconds(destructionTime); 
         Destroy(gameObject);

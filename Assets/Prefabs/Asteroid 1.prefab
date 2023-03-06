@@ -133,7 +133,7 @@ MonoBehaviour:
   destructionVFX: {fileID: 1256001557233130, guid: 2dd0bdb7830e6644da169b32252dca96, type: 3}
   rotateSpeed: 15
   speed: 5
-  scoreValue: 3
+  creditValue: 0
 --- !u!1001 &4264828201265584760
 PrefabInstance:
   m_ObjectHideFlags: 0
