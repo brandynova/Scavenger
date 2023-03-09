@@ -8,21 +8,21 @@ public class ObjectBehaviour : MonoBehaviour
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] GameManager gameManager;
 
-    [SerializeField] GameObject destructionVFX;
-
     [SerializeField] public float rotateSpeed;
     [SerializeField] public float speed;
-    [SerializeField] public int creditValue;
+    [SerializeField] public int value;
     
     private Rigidbody objectRb;
     private AudioSource gameAudio;
-    private float yBounds = -40f;
+    private float yBounds = -30f;
+    private int maxDifficulty = 3;
 
     // Start is called before the first frame update    
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+
         gameAudio = gameManager.GetComponent<AudioSource>();
         objectRb = GetComponent<Rigidbody>();
 
@@ -53,18 +53,23 @@ public class ObjectBehaviour : MonoBehaviour
         // Destroy the object if it travels outside the game boundary.  Deduct the score value of the object from the total score when playing on HARD difficulty
         if (transform.position.y < yBounds)
         {
-            if (gameManager.difficulty == 3) 
+            if (gameManager.difficulty == maxDifficulty && gameObject.CompareTag("Mineral") )
             {
-                int deductCredits = -gameObject.GetComponent<ObjectBehaviour>().creditValue;
-                gameManager.UpdateCredits(deductCredits);
+                DeductMissedMineral();
             }
             Destroy(gameObject);
         }
     }
 
+    void DeductMissedMineral()
+    {
+        int deductCredits = -gameObject.GetComponent<ObjectBehaviour>().value;
+        gameManager.UpdateCredits(deductCredits);
+        gameAudio.PlayOneShot(gameManager.missedMineralSFX, .8f);
+    }
 
     
-    // Do something when the player collides with an object (no physics)
+    // Do something when an asteroid collides with an object (no physics)
     void OnTriggerEnter(Collider other)
     {
         if (gameObject.CompareTag("Asteroid"))
@@ -85,10 +90,11 @@ public class ObjectBehaviour : MonoBehaviour
     
     void DestroyAsteroid()                           
     {        
-        int randomIndex = Random.Range(0,gameManager.destroyAsteroidsSFX.Count);
+        int randomIndex = Random.Range(0, gameManager.destroyAsteroidsSFX.Count);
+
         gameAudio.PlayOneShot(gameManager.destroyAsteroidsSFX[randomIndex], .8f);
 
-        Instantiate(destructionVFX, transform.position, Quaternion.identity); 
+        Instantiate(gameManager.destroyAsteroidsVFX, transform.position, Quaternion.identity); 
         Destroy(gameObject);
     }
 }

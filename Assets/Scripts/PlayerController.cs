@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
 
 {
     [SerializeField] GameManager gameManager;
+    [SerializeField] UIManager uiManager;
+    [SerializeField] MineralManager mineralManager;
 
     [SerializeField] public GameObject destructionVFX;
     [SerializeField] public GameObject hitVFX;
@@ -16,6 +18,10 @@ public class PlayerController : MonoBehaviour
 
     private ParticleSystem shipGunVFX;
     private AudioSource gameAudio;
+
+    [SerializeField] AudioClip launchMissileSFX;
+    [SerializeField] AudioClip hitPlayerSFX;
+    [SerializeField] AudioClip destroyPlayerSFX;
 
     private GameObject pooledMissile;
     
@@ -29,6 +35,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
+        mineralManager = GameObject.Find("Mineral Manager").GetComponent<MineralManager>();
+        
         gameAudio = gameManager.GetComponent<AudioSource>();
         shipGunVFX = shipGun.GetComponent<ParticleSystem>();
         shipGunVFX.Stop();
@@ -73,7 +82,7 @@ public class PlayerController : MonoBehaviour
             if (pooledMissile != null)
             {
                 shipGunVFX.Play(); // play gun flash
-                gameAudio.PlayOneShot(gameManager.launchMissileSFX, 0.5f);
+                gameAudio.PlayOneShot(launchMissileSFX, 0.5f);
 
                 pooledMissile.SetActive(true); // activate pooled missile
                 pooledMissile.transform.position = transform.position + new Vector3 (0, yOffset, 0); // position it at player
@@ -86,43 +95,32 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Mineral")) 
         {
-            CollectMineral(other.gameObject);
+            mineralManager.CollectMineral(other.gameObject);
         }
         else if(other.gameObject.CompareTag("Asteroid"))
         {
             Destroy(other.gameObject);
-            HitPlayer();
+            CollideWithPlayer();
         }
     }
 
-    // Destroy the mineral and increment credits - the mineral's credit value is also the index to the mineral
-    void CollectMineral(GameObject mineral)
-    {
-            int addToCredits = mineral.GetComponent<ObjectBehaviour>().creditValue;
-    
-            gameAudio.PlayOneShot(gameManager.collectMineralSFX, 1.0f);
 
-            gameManager.UpdateCredits(addToCredits);
-            gameManager.UpdateMineralCount(addToCredits); 
-
-            Destroy(mineral); 
-    }
-    
-    // Destroy the player if health is down to 1.  Otherwise reduce shields and keep playing.
-    void HitPlayer()                           
+    // Destroy the player if shield is down to 1.  Otherwise reduce shields and keep playing.
+    void CollideWithPlayer()                           
     {   
         if (gameManager.shieldHealth == 1)
         {
-            gameAudio.PlayOneShot(gameManager.destroyPlayerSFX, 1.0f);
-        
+            gameAudio.PlayOneShot(destroyPlayerSFX, 1.0f);
+            Instantiate(destructionVFX, transform.position, Quaternion.identity);  // spawn destruct explosion
             Destroy(gameObject); // Destroy player ship
-            Instantiate(destructionVFX, transform.position, Quaternion.identity);  // spawn explosion
         }
         else
         {
-            gameAudio.PlayOneShot(gameManager.hitPlayerSFX, 1.0f);
-            Instantiate(hitVFX, transform.position, Quaternion.identity);  // spawn explosion
+            gameAudio.PlayOneShot(hitPlayerSFX, 1.0f);
+            Instantiate(hitVFX, transform.position, Quaternion.identity);  // spawn hit explosion
         }
         gameManager.GameOver(); 
     }
+
+
 }

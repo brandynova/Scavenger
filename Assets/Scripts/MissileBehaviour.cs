@@ -5,14 +5,14 @@ using UnityEngine;
 // Scavenger Lite
 public class MissileBehaviour : MonoBehaviour
 {
-    public float speed;
+    [SerializeField] public float speed;
     private float topBounds = 20f;
 
     // Update is called once per frame
     void Update()
     {
         UpdateMissilePosition();
-        CheckBoundary();
+        CheckMissileBoundary();
     }
 
     void UpdateMissilePosition()
@@ -20,7 +20,7 @@ public class MissileBehaviour : MonoBehaviour
         transform.Translate(Vector3.up * speed * Time.deltaTime);
     }
 
-    void CheckBoundary()
+    void CheckMissileBoundary()
     {
         //If missile is outside boundary, then deactivate it
         if (transform.position.y > topBounds)

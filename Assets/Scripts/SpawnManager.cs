@@ -5,10 +5,11 @@ using UnityEngine;
 // Scavenger Lite
 public class SpawnManager : MonoBehaviour
 {
+    [SerializeField] GameManager gameManager;
+    [SerializeField] MineralManager mineralManager;
+    
     [SerializeField] GameObject[] asteroids;
     [SerializeField] GameObject[] minerals;
-
-    [SerializeField] GameManager gameManager;
 
     [SerializeField] public float asteroidSpawnTime;
 
@@ -22,18 +23,19 @@ public class SpawnManager : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-
+        mineralManager = GameObject.Find("Mineral Manager").GetComponent<MineralManager>();
     }
 
+    // Called from GameManager
     public void SpawnObjects()
     {
+        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty;
         StartCoroutine(SpawnRandomAsteroid());
     }
 
     
     IEnumerator SpawnRandomAsteroid()
     {
-        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty;
         while (gameManager.isGameActive && !gameManager.isPaused)
         {
             yield return new WaitForSeconds(asteroidSpawnRate);
@@ -54,10 +56,12 @@ public class SpawnManager : MonoBehaviour
     }
 
 
-    // Generate one or more minerals when an asteroid is destroyed by a missile
+    // Generate one or more minerals when an asteroid is destroyed by a missile.  Called from PlayerController
     public void GenerateMinerals(Vector3 position)
     {
-        int amountToSpawn = Random.Range(0, gameManager.spawnMaxMinerals);
+        int spawnMaxMinerals = (int) Mathf.Round((mineralManager.mineralCount.Count + 1)/gameManager.difficulty);
+        int amountToSpawn = Random.Range(0, spawnMaxMinerals);
+
         for (int i = 0; i < amountToSpawn; i++)
         {
             int randomIndex = Random.Range(0, minerals.Length);

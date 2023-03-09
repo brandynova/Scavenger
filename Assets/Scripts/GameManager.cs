@@ -9,125 +9,48 @@ using TMPro;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] SpawnManager spawnManager;
-
-    [SerializeField] TextMeshProUGUI creditsText;
-    [SerializeField] TextMeshProUGUI shieldsText;
-    [SerializeField] TextMeshProUGUI timerText;
-    [SerializeField] TextMeshProUGUI greenText;
-    [SerializeField] TextMeshProUGUI purpleText;
-    [SerializeField] TextMeshProUGUI blueText;
-    [SerializeField] TextMeshProUGUI redText;
-    [SerializeField] TextMeshProUGUI yellowText;
-    [SerializeField] TextMeshProUGUI finalScoreText;
-    [SerializeField] TextMeshProUGUI shipyardCreditsText;
-    [SerializeField] TextMeshProUGUI shipyardMaxShieldsText;
-    [SerializeField] TextMeshProUGUI shipyardCurrShieldsText;
-    [SerializeField] TextMeshProUGUI repairText;
-    [SerializeField] TextMeshProUGUI enhanceText;
-    [SerializeField] TextMeshProUGUI endWaveText;
-
-    [SerializeField] Slider shieldSlider;
-    [SerializeField] Slider shipyardSlider;
-    [SerializeField] Button repairButton;
-    [SerializeField] Button enhanceButton;
+    [SerializeField] WaveManager waveManager;
+    [SerializeField] UIManager uiManager;
     
-    [SerializeField] GameObject titleScreen;
-    [SerializeField] GameObject pauseScreen;
-    [SerializeField] GameObject statusScreen;
-    [SerializeField] GameObject endWaveScreen;
-    [SerializeField] GameObject shipyardScreen;
-    [SerializeField] GameObject gameOverScreen;
-    [SerializeField] GameObject creditsScreen;
     [SerializeField] GameObject player;
     
     [SerializeField] public float shieldHealth;
-    [SerializeField] public int repairPrice;
-    [SerializeField] public int enhancePrice;
     [SerializeField] public int difficulty;
-    [SerializeField] public int destructionTime;
-    [SerializeField] public int spawnMaxMinerals;
     [SerializeField] public bool isGameActive;
     [SerializeField] public bool isPaused;
-    [SerializeField] public bool isEndWave;
-    
-    private CanvasGroup screenCanvas;
-    
-    private GameObject playerVFX;
 
-    private AudioSource gameAudio;
+    [SerializeField] public AudioSource engineAudio;
     //private AudioSource gameMusic;
-    private AudioSource engineAudio;
+    private AudioSource gameAudio;
     
-    //[SerializeField] public AudioClip menuSFX;
-    [SerializeField] public AudioClip engineSFX;
-    [SerializeField] public AudioClip launchMissileSFX;
-    [SerializeField] public AudioClip hitPlayerSFX;
-    [SerializeField] public AudioClip destroyPlayerSFX;
-    [SerializeField] public AudioClip collectMineralSFX; 
+    [SerializeField] public GameObject destroyAsteroidsVFX;
+    [SerializeField] public AudioClip missedMineralSFX;
     [SerializeField] public List<AudioClip> destroyAsteroidsSFX;
     
+    [SerializeField] public int credits;
 
-    [SerializeField] public float waveBaseInterval = 20f;
-    
-    private Vector3 startPosition = new Vector3 (0f, -20f, 0f);
-
-    private float waveInterval;
-    private float waveTimer;
-    private float currentAlpha;
-    private float desiredAlpha;
-    private float minutes;
-    private float seconds;
-
-    private int purchaseRepairs;
-    private int purchaseEnhance;
     private int maxDifficulty = 3;
-    private int numMinerals = 5;
-    private int numGreen;
-    private int numPurple;
-    private int numBlue;
-    private int numRed;
-    private int numYellow;
-    private int credits;
-    private int waveNumber;
-
-    
-    private float fadeTime = 2f;
-    private bool isTitleScreenFade;
 
 
     // Start is called before the first frame update
     void Start()
     {
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
+        waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
+        uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
 
-        gameAudio = GetComponent<AudioSource>();
+        //gameAudio = GetComponent<AudioSource>();
         engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
-        //gameMusic = GameObject.Find("Audio Game Music").GetComponent<AudioSource>();
+        engineAudio.Play();
 
+        //gameMusic = GameObject.Find("Audio Game Music").GetComponent<AudioSource>();
+        //gameMusic.Play();
+        
         player = GameObject.Find("Player");
         player.SetActive(true);
-        isTitleScreenFade = false;
-
-        //gameMusic.Play();
-        engineAudio.Play();
-        
-        shipyardScreen.gameObject.SetActive(true);
-        repairButton = GameObject.Find("Repair Button").GetComponent<Button>();
-        enhanceButton = GameObject.Find("Enhance Button").GetComponent<Button>();
-        shipyardScreen.gameObject.SetActive(false);
-
-        titleScreen.gameObject.SetActive(true);
-        statusScreen.gameObject.SetActive(false);
-        endWaveScreen.gameObject.SetActive(false);
-        shipyardScreen.gameObject.SetActive(false);
-        gameOverScreen.gameObject.SetActive(false);
-        creditsScreen.gameObject.SetActive(false);
 
         Time.timeScale = 0;
-        isPaused = false;
-        isEndWave = false;
-        waveInterval = waveBaseInterval;
-        waveTimer = waveInterval;        
+        isPaused = false; 
     }
 
     // Update is called once per frame
@@ -136,323 +59,41 @@ public class GameManager : MonoBehaviour
          //Check if the Pause key is pressed (escape) 
          if (Input.GetKeyDown(KeyCode.Escape) && isGameActive)
          {
-            PauseController();
+            TogglePause();
          }   
-         // Process wave timer
-         if (!isEndWave && !isPaused && isGameActive)
-         {
-            ProcessWaveTimer();
-         }
-         // Check if the title screen is being faded out (start of game only)
-         if (isTitleScreenFade)
-         {
-            FadeTitleScreen();
-         }
     }
 
-    // This is called from the DifficultyControl script, once the player selects a difficulty level
-    public void StartFadeTitle(int playerDifficulty)
-    {
-        difficulty = playerDifficulty;
-        isTitleScreenFade = true;
-        currentAlpha = 1f;
-        desiredAlpha = 0f;
-        screenCanvas = titleScreen.GetComponent<CanvasGroup>();
-    }
-    
-    void FadeTitleScreen()
-    {
-        Time.timeScale = 1;
-        currentAlpha = Mathf.MoveTowards(currentAlpha, desiredAlpha, fadeTime * Time.deltaTime);
-        screenCanvas.alpha = currentAlpha;
-        if (currentAlpha == desiredAlpha)
-        { 
-            isTitleScreenFade = false;  
-            StartGame();
-        }
-    }
-
-
-    public void StartGame()
+    // Called from DifficultyControl
+    public void StartGame(int playerDifficulty)
     {
         credits = 0;
-        numGreen = -1;
-        numPurple = -1;
-        numBlue = -1;
-        numRed = -1;
-        numYellow = -1;
-        
         isPaused = false;  
-        isEndWave = false;
-
-        titleScreen.gameObject.SetActive(false);
-        screenCanvas.alpha = 1f;
-
-        titleScreen.gameObject.SetActive(false);
-        creditsScreen.gameObject.SetActive(false);
-        statusScreen.gameObject.SetActive(true);
-        
         isGameActive = true;
         player.SetActive(true);
-
-        UpdateCredits(0);
-        InitializeMinerals();
-        spawnMaxMinerals = (int) Mathf.Round((numMinerals + 1)/difficulty);
-
+        difficulty = playerDifficulty;
         shieldHealth = maxDifficulty - difficulty + 1; // Shields can vary from 1 - 3 based on difficulty
-        shieldSlider.maxValue = shieldHealth;
-        shieldSlider.fillRect.gameObject.SetActive(true);
-        shipyardSlider.maxValue = shieldHealth;
-        shipyardSlider.fillRect.gameObject.SetActive(true);
-        UpdateShields();
 
-        waveNumber = 1;
-        waveTimer = waveInterval; 
-        
-        purchaseRepairs = repairPrice * difficulty;
-        purchaseEnhance = enhancePrice * difficulty;
-                
-        DisplayWaveTimer();
-
+        uiManager.InitializeStatusScreen();
+        waveManager.InitializeWave();
         spawnManager.SpawnObjects();
     }
 
-
-    
-    // *********************** MINERAL CONTROL *******************************
-    void InitializeMinerals()
-    {
-        for (int i = 1; i <= numMinerals; ++i)
-        {
-            UpdateMineralCount(i);
-        }
-    }
-    
-
-    // *********************** WAVE CONTROL *******************************
-    void ProcessWaveTimer()
-    {
-
-        if (waveTimer <= 0) // Initiate next wave
-        {
-            ++waveNumber;
-            waveTimer = waveInterval * waveNumber * difficulty; // increase the length of each subsequent wave based on difficulty 
-            DisplayWaveTimer();   
-            
-            //Debug.Log("Starting wave " + waveNumber + ".  Timer set to: " + waveTimer);
-            
-            isEndWave = true;
-            EndWave();
-        }
-        else
-        {
-            waveTimer -= Time.deltaTime;
-            DisplayWaveTimer();
-        }
-    }
-
-    void DisplayWaveTimer()
-    {
-        minutes= Mathf.FloorToInt(waveTimer / 60);   
-        seconds=Mathf.FloorToInt(waveTimer % 60);
-        
-        timerText.text = "Wave " + waveNumber + ":  " + minutes.ToString() + ":" + seconds.ToString().PadLeft(2,'0');
-    }
-
-    void EndWave()
-    {
-        if(isGameActive)
-        {
-            //Debug.Log("End Wave");
-            Time.timeScale = 0;
-        
-            //gameMusic.Pause();
-            engineAudio.Pause();
-
-            if (player != null)
-            {
-                player.SetActive(false);
-                player.transform.position = startPosition;
-            }
-        
-            DestroyObjects(); // destroy any remaining asteroids and minerals
-        
-            purchaseRepairs = repairPrice * difficulty * (waveNumber - 1);
-            purchaseEnhance = enhancePrice * difficulty * (waveNumber - 1);
-        
-            endWaveText.text = "Completed \n Wave " + (waveNumber - 1);
-
-            statusScreen.gameObject.SetActive(false);
-            endWaveScreen.SetActive(true);
-        }
-    }
-
-    // Between waves, remove all objects (Asteroids, minerals, explosion effects, missiles
-    void DestroyObjects()
-    {
-        GameObject[] asteroids = GameObject.FindGameObjectsWithTag("Asteroid");
-        foreach (GameObject nextAsteroid in asteroids) 
-        {
-            Destroy(nextAsteroid);
-        }
-
-        GameObject[] minerals = GameObject.FindGameObjectsWithTag("Mineral");
-        foreach (GameObject nextMineral in minerals) 
-        {
-            Destroy(nextMineral);
-        }
-
-        GameObject[] effects = GameObject.FindGameObjectsWithTag("VFX");
-        foreach (GameObject nextEffect in effects) 
-        {
-            Destroy(nextEffect);
-        }
-
-        GameObject[] missiles = GameObject.FindGameObjectsWithTag("Missile");
-        foreach (GameObject nextMissile in missiles) 
-        {
-            nextMissile.SetActive(false);
-        }
-    }
-
-    // From Continue button click on Shipyard
-    public void ContinueNextWave()
-    {
-        Time.timeScale = 1;
-
-        //gameMusic.Play();
-        engineAudio.Play();
-        
-        isEndWave = false;
-        shipyardScreen.SetActive(false);
-        statusScreen.gameObject.SetActive(true);
-
-        player.SetActive(true);
-    }
-
-    
-    // *********************** END WAVE CONTROL *******************************
-
-
-    
-    // *********************** SHIPYARD *******************************
-
-    public void ShipyardRepairs()
-    {
-        shipyardCreditsText.text = "Available Credits: " + credits;
-        shipyardMaxShieldsText.text = "Maxium Level: " + shieldSlider.maxValue * 100;
-        shipyardCurrShieldsText.text = "Current Level: " + shieldHealth * 100;
-        shipyardSlider.value = shieldHealth;
-
-        repairText.text = purchaseRepairs + " Credits";
-        enhanceText.text = purchaseEnhance + " Credits";
-
-        if (purchaseRepairs <= credits && shieldHealth < shieldSlider.maxValue)
-        {
-            repairButton.interactable = true;
-            repairText.alpha = 1f;
-
-        }
-        else
-        {
-            repairButton.interactable = false;
-            repairText.alpha = .4f;
-        }
-        
-        if (purchaseEnhance <= credits)
-        {
-            enhanceButton.interactable = true;
-            enhanceText.alpha = 1f;
-        }
-        else
-        {
-            enhanceButton.interactable = false;
-            enhanceText.alpha = .4f;
-        }
-        
-        endWaveScreen.SetActive(false);
-        shipyardScreen.SetActive(true);
-    }
-
-    public void RepairShields()
-    {
-        ++shieldHealth;
-        
-        UpdateCredits(-purchaseRepairs);
-        UpdateShields();
-        ShipyardRepairs();
-    }
-
-    public void EnhanceShields()
-    {
-        ++shieldHealth;
-        ++shieldSlider.maxValue;
-        ++shipyardSlider.maxValue;
-
-        UpdateCredits(-purchaseEnhance);
-        UpdateShields();
-        ShipyardRepairs();
-    }
-    
-    // *********************** END SHIPYARD *******************************
-
-    
-    // *********************** STATUS CONTROL *******************************
-
+    // Called from ShipyardManager, MineralManager & ObjectBehaviour
     public void UpdateCredits(int addToCredits)
     {
-        if(isGameActive || isEndWave)
+        if(isGameActive || waveManager.isEndWave)
         {
             if (addToCredits > 0)
             {
                 addToCredits += (difficulty - 1);
             }
             credits += addToCredits;
-            creditsText.text = "Credits: " + credits;
-        }
-    }
-
-    
-    void UpdateShields()
-    {
-        shieldSlider.value = shieldHealth;
-        shipyardSlider.value = shieldHealth;
-        shieldsText.text = "Shields: " + shieldHealth * 100;
-    }
-
-
-    public void UpdateMineralCount(int mineralIndex)
-    {
-        if(isGameActive)
-        {
-            switch (mineralIndex)
-            {
-                case 1:
-                    ++numGreen;
-                    greenText.text = "Green: " + numGreen;
-                    break;
-                case 2:
-                    ++numPurple;
-                    purpleText.text = "Purple: " + numPurple;
-                    break;
-                case 3:
-                    ++numBlue;
-                    blueText.text = "Blue: " + numBlue;
-                    break;
-                case 4:
-                    ++numRed;
-                    redText.text = "Red: " + numRed;
-                    break;
-                case 5:
-                    ++numYellow;
-                    yellowText.text = "Yellow: " + numYellow;
-                    break;
-            }
+            uiManager.DisplayCredits(credits);
         }
     }
 
 
-    void PauseController ()
+    void TogglePause ()
     {
         isPaused = !isPaused;
         if (isPaused)
@@ -462,7 +103,7 @@ public class GameManager : MonoBehaviour
             //gameMusic.Pause();
             engineAudio.Pause();
 
-            pauseScreen.SetActive(true);
+            uiManager.TogglePauseScreen(true);
         }
         else
         {
@@ -470,37 +111,32 @@ public class GameManager : MonoBehaviour
 
             //gameMusic.Play();
             engineAudio.Play();
-
-            pauseScreen.SetActive(false);
+            
+            uiManager.TogglePauseScreen(false);
         }
     } 
    
-    
     public void GameOver()
     {
         --shieldHealth;
-        UpdateShields();
-
-       if (shieldHealth == 0)
-       {
-            StartCoroutine(Destruction()); //launching the timer of destruction
-       }
-        
+        uiManager.DisplayShields();
+        if (shieldHealth <= 0)
+        {
+            StartCoroutine(LaunchGameOver()); //launch the timer of destruction
+        }
     }
 
-    IEnumerator Destruction() //wait for the estimated time, and destroying or deactivating the object
+    // Wait for the indicated time, then destroy the player ship, then display Game Over screen with final score
+    IEnumerator LaunchGameOver() 
     {
-        int finalScore;
+        float destructionTime = 1.5f;
 
         yield return new WaitForSeconds(destructionTime); 
         
         engineAudio.Stop();
         //gameMusic.Play();
-        gameOverScreen.gameObject.SetActive(true);  
-
-        //Debug.Log("FINAL:  Minerals (" + numGreen + ", " + numPurple + ", " + numBlue + ", " + numRed + ", " + numYellow + ") \n Difficulty: " + difficulty + ".  Credits: " + credits);
-        finalScore = (numGreen + numPurple*2 + numBlue*3 + numRed*4 + numYellow*5 + waveNumber)*difficulty + credits;
-        finalScoreText.text = "Final Score: " + finalScore;
+        
+        uiManager.DisplayGameOver();
         
         isGameActive = false;
         Time.timeScale = 0;
@@ -513,20 +149,8 @@ public class GameManager : MonoBehaviour
     }
    
 
-    public void ShowCredits()
-    {
-        if (player != null)
-        {
-            player.SetActive(false);
-        }
-        creditsScreen.gameObject.SetActive(true);
-        titleScreen.gameObject.SetActive(false);
-        gameOverScreen.gameObject.SetActive(false);  
-    }
-
     public void ExitGame() 
     {
         Application.Quit();
     }
-    
 }

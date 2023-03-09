@@ -3,7 +3,10 @@ guid: 7e0a953c09e0bf640a71f2a347c71f29
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - spawnManager: {instanceID: 0}
+  - gameManager: {instanceID: 0}
+  - destructionVFX: {fileID: 191186, guid: 079954accd64b32419ec069129c81273, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

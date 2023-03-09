@@ -117,7 +117,7 @@ MonoBehaviour:
   destructionVFX: {fileID: 0}
   rotateSpeed: 25
   speed: 25
-  creditValue: 5
+  value: 5
 --- !u!54 &3546490239550484262
 Rigidbody:
   m_ObjectHideFlags: 0

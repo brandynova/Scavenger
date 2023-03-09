@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class DifficultyControl : MonoBehaviour
 {
 
-    public GameManager gameManager;
+    //public TitleScreenController titleScreenController;
+    public UIManager uiManager;
     public int difficulty; // Set per button (easy, medium, hard)
 
     private Button button;
@@ -16,8 +17,7 @@ public class DifficultyControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
-        
+        uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
 
         button = GetComponent<Button>();
         button.onClick.AddListener(SetDifficulty);
@@ -26,7 +26,7 @@ public class DifficultyControl : MonoBehaviour
 
     void SetDifficulty()
     {
-        gameManager.StartFadeTitle(difficulty);
+        uiManager.StartScreenTransition(difficulty);
     }
 
  

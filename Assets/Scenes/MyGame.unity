@@ -156,7 +156,7 @@ RectTransform:
   m_Children:
   - {fileID: 2024563351}
   m_Father: {fileID: 1070768007}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
@@ -462,7 +462,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'DEVELOPER
+  m_text: 'CREATED BY
 
     Brandy Nova'
   m_isRightToLeft: 0
@@ -1221,7 +1221,7 @@ RectTransform:
   - {fileID: 2127023951}
   - {fileID: 1572390487}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1593,8 +1593,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1056094252}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1637137683}
+        m_TargetAssemblyTypeName: ShipyardManager, Assembly-CSharp
         m_MethodName: RepairShields
         m_Mode: 1
         m_Arguments:
@@ -2056,13 +2056,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 513246218}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 14.14, y: 3.18, z: -1.8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_Father: {fileID: 1015159020}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &543896077
 GameObject:
@@ -3303,7 +3303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37329e561b95b0043a0a82974ee3f755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1056094252}
+  uiManager: {fileID: 1285478965}
   difficulty: 2
 --- !u!1 &724689357
 GameObject:
@@ -3609,7 +3609,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &831080776
 GameObject:
@@ -3893,7 +3893,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37329e561b95b0043a0a82974ee3f755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1056094252}
+  uiManager: {fileID: 1285478965}
   difficulty: 1
 --- !u!1 &873952260
 GameObject:
@@ -4043,7 +4043,7 @@ GameObject:
   - component: {fileID: 908321329}
   - component: {fileID: 908321328}
   m_Layer: 5
-  m_Name: Continue Button
+  m_Name: Next Wave Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4126,8 +4126,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1056094252}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 2110278885}
+        m_TargetAssemblyTypeName: WaveManager, Assembly-CSharp
         m_MethodName: ContinueNextWave
         m_Mode: 1
         m_Arguments:
@@ -4520,6 +4520,7 @@ Transform:
   m_Children:
   - {fileID: 963194228}
   - {fileID: 705507995}
+  - {fileID: 513246220}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4658,6 +4659,141 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1017093364}
   m_CullTransparentMesh: 1
+--- !u!1 &1031243920
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1031243921}
+  - component: {fileID: 1031243923}
+  - component: {fileID: 1031243922}
+  m_Layer: 5
+  m_Name: Completed Text
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1031243921
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031243920}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1070768007}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 91}
+  m_SizeDelta: {x: 200, y: 75}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1031243922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031243920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Completed
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: fe615c40225014542b62517f6f0fabf4, type: 2}
+  m_sharedMaterial: {fileID: 21722484755586150, guid: fe615c40225014542b62517f6f0fabf4, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 1
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 0.9607843, g: 0.7176471, b: 0.039215688, a: 1}
+    topRight: {r: 0.9607843, g: 0.7176471, b: 0.039215688, a: 1}
+    bottomLeft: {r: 1, g: 0, b: 0, a: 1}
+    bottomRight: {r: 1, g: 0, b: 0, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 0
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1031243923
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1031243920}
+  m_CullTransparentMesh: 1
 --- !u!1 &1053632972
 GameObject:
   m_ObjectHideFlags: 0
@@ -4791,47 +4927,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnManager: {fileID: 1787869572}
-  creditsText: {fileID: 1617576421}
-  shieldsText: {fileID: 14642426}
-  timerText: {fileID: 1798468318}
-  greenText: {fileID: 2132993121}
-  purpleText: {fileID: 1435522098}
-  blueText: {fileID: 1706302730}
-  redText: {fileID: 1982020440}
-  yellowText: {fileID: 1355762417}
-  finalScoreText: {fileID: 1214820644}
-  shipyardCreditsText: {fileID: 2120129317}
-  shipyardMaxShieldsText: {fileID: 1457735176}
-  shipyardCurrShieldsText: {fileID: 713662283}
-  repairText: {fileID: 1492043935}
-  enhanceText: {fileID: 968844760}
-  endWaveText: {fileID: 1981747816}
-  shieldSlider: {fileID: 1005374544}
-  shipyardSlider: {fileID: 1780272254}
-  repairButton: {fileID: 448628613}
-  enhanceButton: {fileID: 1319431334}
-  titleScreen: {fileID: 1206619307}
-  pauseScreen: {fileID: 725782087}
-  statusScreen: {fileID: 1559512927}
-  endWaveScreen: {fileID: 1070768006}
-  shipyardScreen: {fileID: 118379459}
-  gameOverScreen: {fileID: 2127023950}
-  creditsScreen: {fileID: 1572390486}
+  waveManager: {fileID: 2110278885}
+  uiManager: {fileID: 1285478965}
   player: {fileID: 935855618}
   shieldHealth: 10
-  repairPrice: 10
-  enhancePrice: 20
   difficulty: 0
-  destructionTime: 2
-  spawnMaxMinerals: 0
   isGameActive: 0
   isPaused: 0
-  isEndWave: 0
-  engineSFX: {fileID: 8300000, guid: c59eac9217201064da3371e9226df944, type: 3}
-  launchMissileSFX: {fileID: 8300000, guid: d63ac8e49f199e64e8c62290206a53aa, type: 3}
-  hitPlayerSFX: {fileID: 8300000, guid: 9c87f285d32fa4569b77ddf3a7e6df5e, type: 3}
-  destroyPlayerSFX: {fileID: 8300000, guid: 05e80027c83f4bd42b9791db3b9e7652, type: 3}
-  collectMineralSFX: {fileID: 8300000, guid: 67e207f22b4f20b4283c53e2b7178de3, type: 3}
+  engineAudio: {fileID: 774135767}
+  destroyAsteroidsVFX: {fileID: 1256001557233130, guid: 2dd0bdb7830e6644da169b32252dca96, type: 3}
+  missedMineralSFX: {fileID: 8300000, guid: 3064fbe873b093d45bb46b886bd6f32e, type: 3}
   destroyAsteroidsSFX:
   - {fileID: 8300000, guid: 172c57cc2abb50547baea2cd52fc0611, type: 3}
   - {fileID: 8300000, guid: 5278a95bce453e74db8729a549e6195a, type: 3}
@@ -4840,7 +4945,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 56e8138ec056a044aa6e20c188ed96b2, type: 3}
   - {fileID: 8300000, guid: a22e8ce1156d88d4e8f30b66d313010c, type: 3}
   - {fileID: 8300000, guid: 6cae7568b62e34a4593a84e7173147f3, type: 3}
-  waveBaseInterval: 20
+  credits: 0
 --- !u!4 &1056094253
 Transform:
   m_ObjectHideFlags: 0
@@ -4987,7 +5092,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 103.7124, y: -25}
+  m_AnchoredPosition: {x: 16, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1070225367
@@ -5010,7 +5115,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Mineral Count
+  m_text: Scavenged
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
   m_sharedMaterial: {fileID: 21976234817437650, guid: f0bfb73449e8943d0a0d1efb2290352e, type: 2}
@@ -5044,7 +5149,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 37
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -5165,6 +5270,7 @@ RectTransform:
   m_LocalScale: {x: 1.02, y: 1.02, z: 1.02}
   m_ConstrainProportionsScale: 1
   m_Children:
+  - {fileID: 1031243921}
   - {fileID: 1981747815}
   - {fileID: 1841063318}
   - {fileID: 12138421}
@@ -5506,7 +5612,6 @@ GameObject:
   - component: {fileID: 1206619310}
   - component: {fileID: 1206619309}
   - component: {fileID: 1206619311}
-  - component: {fileID: 1206619312}
   m_Layer: 5
   m_Name: Title Screen
   m_TagString: Untagged
@@ -5590,18 +5695,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &1206619312
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1206619307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc4f1094fad1f0f4a9403a58def86bb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1214820642
 GameObject:
   m_ObjectHideFlags: 0
@@ -5879,6 +5972,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1273739784}
   m_CullTransparentMesh: 1
+--- !u!1 &1285478963
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1285478964}
+  - component: {fileID: 1285478965}
+  m_Layer: 0
+  m_Name: UI Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1285478964
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285478963}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -20.81948, y: -17.238773, z: -8.892434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1285478965
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1285478963}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 759c4c116868e0d42b75429c300a0923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1056094252}
+  waveManager: {fileID: 2110278885}
+  mineralManager: {fileID: 2032054398}
+  endWaveScreen: {fileID: 1070768006}
+  statusScreen: {fileID: 1559512927}
+  titleScreen: {fileID: 1206619307}
+  shipyardScreen: {fileID: 118379459}
+  pauseScreen: {fileID: 725782087}
+  gameOverScreen: {fileID: 2127023950}
+  creditsScreen: {fileID: 1572390486}
+  shipyardCreditsText: {fileID: 2120129317}
+  shipyardMaxShieldsText: {fileID: 1457735176}
+  shipyardCurrShieldsText: {fileID: 713662283}
+  repairText: {fileID: 1492043935}
+  enhanceText: {fileID: 968844760}
+  shieldSlider: {fileID: 1005374544}
+  shipyardSlider: {fileID: 1780272254}
+  repairButton: {fileID: 448628613}
+  enhanceButton: {fileID: 1319431334}
+  creditsText: {fileID: 1617576421}
+  shieldsText: {fileID: 14642426}
+  timerText: {fileID: 1798468318}
+  greenText: {fileID: 2132993121}
+  purpleText: {fileID: 1435522098}
+  blueText: {fileID: 1706302730}
+  redText: {fileID: 1982020440}
+  yellowText: {fileID: 1355762417}
+  endWaveText: {fileID: 1981747816}
+  finalScoreText: {fileID: 1214820644}
 --- !u!1 &1294573138
 GameObject:
   m_ObjectHideFlags: 0
@@ -6098,8 +6264,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1056094252}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 1637137683}
+        m_TargetAssemblyTypeName: ShipyardManager, Assembly-CSharp
         m_MethodName: EnhanceShields
         m_Mode: 1
         m_Arguments:
@@ -6526,9 +6692,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1056094252}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ShowCredits
+      - m_Target: {fileID: 1285478965}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: DisplayCreditsScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6588,7 +6754,7 @@ GameObject:
   - component: {fileID: 1355762418}
   - component: {fileID: 1355762417}
   m_Layer: 5
-  m_Name: Yellow Text
+  m_Name: Mineral 5 Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6611,7 +6777,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 103.71228, y: -120}
+  m_AnchoredPosition: {x: 16, y: -105}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1355762417
@@ -6668,7 +6834,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 33
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -7183,7 +7349,7 @@ GameObject:
   - component: {fileID: 1435522099}
   - component: {fileID: 1435522098}
   m_Layer: 5
-  m_Name: Purple Text
+  m_Name: Mineral 2 Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7206,7 +7372,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 103.71228, y: -64.99994}
+  m_AnchoredPosition: {x: 16, y: -60}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1435522098
@@ -7263,7 +7429,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 33
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -7766,17 +7932,9 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 919132148634325491, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4580106435710126785, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6855926598413178578, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6855926598413178578, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
       propertyPath: m_LocalPosition.x
@@ -7819,9 +7977,29 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6855926598413178579, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
+      propertyPath: uiManager
+      value: 
+      objectReference: {fileID: 1285478965}
+    - target: {fileID: 6855926598413178579, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
       propertyPath: gameManager
       value: 
       objectReference: {fileID: 1056094252}
+    - target: {fileID: 6855926598413178579, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
+      propertyPath: hitPlayerSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 9c87f285d32fa4569b77ddf3a7e6df5e, type: 3}
+    - target: {fileID: 6855926598413178579, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
+      propertyPath: mineralManager
+      value: 
+      objectReference: {fileID: 2032054398}
+    - target: {fileID: 6855926598413178579, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
+      propertyPath: destroyPlayerSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: 05e80027c83f4bd42b9791db3b9e7652, type: 3}
+    - target: {fileID: 6855926598413178579, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
+      propertyPath: launchMissileSFX
+      value: 
+      objectReference: {fileID: 8300000, guid: d63ac8e49f199e64e8c62290206a53aa, type: 3}
     - target: {fileID: 6855926598413178585, guid: 34c6d2dd5ed8d1445be955164fbbb9ca, type: 3}
       propertyPath: m_Name
       value: Player
@@ -8407,7 +8585,7 @@ GameObject:
   - component: {fileID: 1617576422}
   - component: {fileID: 1617576421}
   m_Layer: 5
-  m_Name: Credits Text
+  m_Name: Status Credit Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8626,9 +8804,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1056094252}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ShowCredits
+      - m_Target: {fileID: 2110278885}
+        m_TargetAssemblyTypeName: WaveManager, Assembly-CSharp
+        m_MethodName: DestroyRemainingObjects
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1285478965}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: DisplayCreditsScreen
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8676,6 +8866,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1624472287}
   m_CullTransparentMesh: 1
+--- !u!1 &1637137682
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1637137684}
+  - component: {fileID: 1637137683}
+  m_Layer: 0
+  m_Name: Shipyard Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1637137683
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637137682}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4ac75b2cf9c1104f96745a20adddc90, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1056094252}
+  waveManager: {fileID: 2110278885}
+  uiManager: {fileID: 1285478965}
+  player: {fileID: 935855618}
+--- !u!4 &1637137684
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637137682}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -20.81948, y: -17.238773, z: -8.892434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1659717418
 GameObject:
   m_ObjectHideFlags: 0
@@ -8709,7 +8947,7 @@ RectTransform:
   m_Children:
   - {fileID: 1161036055}
   m_Father: {fileID: 1070768007}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -8902,7 +9140,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!223 &1691630289
 Canvas:
   m_ObjectHideFlags: 0
@@ -9071,7 +9309,7 @@ GameObject:
   - component: {fileID: 1706302731}
   - component: {fileID: 1706302730}
   m_Layer: 5
-  m_Name: Blue Text
+  m_Name: Mineral 3 Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9094,7 +9332,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 103.71228, y: -85}
+  m_AnchoredPosition: {x: 16, y: -75}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1706302730
@@ -9151,7 +9389,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 33
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -9525,6 +9763,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 987975686ce25ee4698d98619b0a3c61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameManager: {fileID: 1056094252}
+  mineralManager: {fileID: 2032054398}
   asteroids:
   - {fileID: 1547542924590721207, guid: dbe9f4dcbb6194940a8e9465a8ace2d5, type: 3}
   - {fileID: 5036858327386342314, guid: 0348f31fff6ca7f4c83475ecb5879f9e, type: 3}
@@ -9535,7 +9775,6 @@ MonoBehaviour:
   - {fileID: 2157738167121515987, guid: 8bbec6e2bdcc09c45ac1f252b1cd07d5, type: 3}
   - {fileID: 3222216495041068097, guid: 46f525d0fa7938a44a524c307b5e04e8, type: 3}
   - {fileID: 3546490239550484248, guid: 28d22309289de4542b51cb1876221a77, type: 3}
-  gameManager: {fileID: 1056094252}
   asteroidSpawnTime: 4
 --- !u!4 &1787869573
 Transform:
@@ -9579,7 +9818,7 @@ GameObject:
   - component: {fileID: 1798468319}
   - component: {fileID: 1798468318}
   m_Layer: 5
-  m_Name: Wave Text
+  m_Name: Wave Timer Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9735,7 +9974,7 @@ RectTransform:
   m_Children:
   - {fileID: 1700837893}
   m_Father: {fileID: 1070768007}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9798,9 +10037,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1056094252}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: ShipyardRepairs
+      - m_Target: {fileID: 1637137683}
+        m_TargetAssemblyTypeName: ShipyardManager, Assembly-CSharp
+        m_MethodName: InitializeShipyard
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -10529,11 +10768,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1070768007}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 91}
+  m_AnchoredPosition: {x: 0, y: 37}
   m_SizeDelta: {x: 200, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1981747816
@@ -10556,7 +10795,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Completed \nWave 0"
+  m_text: Wave 0
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fe615c40225014542b62517f6f0fabf4, type: 2}
   m_sharedMaterial: {fileID: 21722484755586150, guid: fe615c40225014542b62517f6f0fabf4, type: 2}
@@ -10568,10 +10807,10 @@ MonoBehaviour:
     rgba: 4294967295
   m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 1
-  m_colorMode: 3
+  m_colorMode: 0
   m_fontColorGradient:
-    topLeft: {r: 0.9607843, g: 0.7176471, b: 0.039215688, a: 1}
-    topRight: {r: 0.9607843, g: 0.7176471, b: 0.039215688, a: 1}
+    topLeft: {r: 1, g: 0, b: 0, a: 1}
+    topRight: {r: 1, g: 0, b: 0, a: 1}
     bottomLeft: {r: 1, g: 0, b: 0, a: 1}
     bottomRight: {r: 1, g: 0, b: 0, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
@@ -10583,8 +10822,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 32
+  m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -10645,7 +10884,7 @@ GameObject:
   - component: {fileID: 1982020441}
   - component: {fileID: 1982020440}
   m_Layer: 5
-  m_Name: Red Text
+  m_Name: Mineral 4 Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10668,7 +10907,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 103.71228, y: -105}
+  m_AnchoredPosition: {x: 16, y: -90}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1982020440
@@ -10725,7 +10964,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 33
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -10903,6 +11142,60 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2024563350}
   m_CullTransparentMesh: 1
+--- !u!1 &2032054397
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2032054399}
+  - component: {fileID: 2032054398}
+  m_Layer: 0
+  m_Name: Mineral Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2032054398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032054397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d71d6fcaed04c041ab63007afd77616, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1056094252}
+  uiManager: {fileID: 1285478965}
+  collectMineralSFX: {fileID: 8300000, guid: 67e207f22b4f20b4283c53e2b7178de3, type: 3}
+  mineralName:
+  - 'Green: '
+  - 'Purple: '
+  - 'Blue: '
+  - 'Red: '
+  - 'Yellow: '
+  mineralCount: 
+--- !u!4 &2032054399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2032054397}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -20.81948, y: -17.238773, z: -8.892434}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2069354333
 GameObject:
   m_ObjectHideFlags: 0
@@ -11050,7 +11343,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37329e561b95b0043a0a82974ee3f755, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameManager: {fileID: 1056094252}
+  uiManager: {fileID: 1285478965}
   difficulty: 3
 --- !u!1 &2083401519
 GameObject:
@@ -11404,6 +11697,56 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2100568912}
   m_CullTransparentMesh: 1
+--- !u!1 &2110278884
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2110278887}
+  - component: {fileID: 2110278885}
+  m_Layer: 0
+  m_Name: Wave Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2110278885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110278884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a12ebc156f5678147b996a849aaca395, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManager: {fileID: 1056094252}
+  uiManager: {fileID: 1285478965}
+  shipyardManager: {fileID: 1637137683}
+  player: {fileID: 935855618}
+  waveNumber: 0
+  isEndWave: 0
+--- !u!4 &2110278887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110278884}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -17.285412, y: -17.212782, z: -8.904992}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2117087390
 GameObject:
   m_ObjectHideFlags: 0
@@ -11464,7 +11807,7 @@ GameObject:
   - component: {fileID: 2120129318}
   - component: {fileID: 2120129317}
   m_Layer: 5
-  m_Name: Credits Text
+  m_Name: Shipyard Credit Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11693,7 +12036,7 @@ GameObject:
   - component: {fileID: 2132993122}
   - component: {fileID: 2132993121}
   m_Layer: 5
-  m_Name: Green Text
+  m_Name: Mineral 1 Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11716,7 +12059,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 103.71228, y: -45}
+  m_AnchoredPosition: {x: 16, y: -45}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2132993121
@@ -11773,7 +12116,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 33
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 4
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
