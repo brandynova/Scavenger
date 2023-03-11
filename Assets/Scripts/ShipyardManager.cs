@@ -7,14 +7,17 @@ public class ShipyardManager : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] WaveManager waveManager;
     [SerializeField] UIManager uiManager;
+    [SerializeField] PlayerController playerController;
 
     [SerializeField] GameObject player;
     
     private Vector3 startPosition = new Vector3 (0f, -20f, 0f);
-    private int repairPrice = 10;
-    private int enhancePrice = 20;
-    private int purchaseRepairs;
-    private int purchaseEnhance;
+    private int upgradeThrustPrice = 15;
+    private int repairShieldsPrice = 10;
+    private int upgradeShieldsPrice = 20;
+    private int purchaseRepairShields;
+    private int purchaseUpgradeShields;
+    private int purchaseUpgradeThrust;
 
     // Start is called before the first frame update
     void Start()
@@ -22,43 +25,46 @@ public class ShipyardManager : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
+        playerController= GameObject.Find("Player").GetComponent<PlayerController>();
         
         player = GameObject.Find("Player");
-        
     }
-
-    // Update is called once per frame
-    void Update()
-    {
         
-    }
-
-    
     public void InitializeShipyard()
     {
-        purchaseRepairs = repairPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
-        purchaseEnhance = enhancePrice * gameManager.difficulty * (waveManager.waveNumber - 1);
-        uiManager.DisplayShipyard(purchaseRepairs, purchaseEnhance);
+        purchaseRepairShields = repairShieldsPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
+        purchaseUpgradeShields = upgradeShieldsPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
+        purchaseUpgradeThrust = upgradeThrustPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
+        uiManager.DisplayShipyard(purchaseRepairShields, purchaseUpgradeShields, purchaseUpgradeThrust);
     }
 
     public void RepairShields()
     {
-        ++gameManager.shieldHealth;
+        ++playerController.shieldHealth;
         
-        gameManager.UpdateCredits(-purchaseRepairs);
+        gameManager.UpdateCredits(-purchaseRepairShields);
         uiManager.DisplayShields();
-        uiManager.DisplayShipyard(purchaseRepairs, purchaseEnhance);
+        uiManager.DisplayShipyard(purchaseRepairShields, purchaseUpgradeShields, purchaseUpgradeThrust);
     }
 
-    public void EnhanceShields()
+    public void UpgradeShields()
     {
-        ++gameManager.shieldHealth;
+        ++playerController.shieldHealth;
         ++uiManager.shieldSlider.maxValue;
         ++uiManager.shipyardSlider.maxValue;
 
-        gameManager.UpdateCredits(-purchaseEnhance);
+        gameManager.UpdateCredits(-purchaseUpgradeShields);
         uiManager.DisplayShields();
-        uiManager.DisplayShipyard(purchaseRepairs, purchaseEnhance);
+        uiManager.DisplayShipyard(purchaseRepairShields, purchaseUpgradeShields, purchaseUpgradeThrust);
+    }
+
+    public void UpgradeThrust()
+    {
+        playerController.horizontalThrust += 10f;
+
+        gameManager.UpdateCredits(-purchaseUpgradeThrust);
+        uiManager.DisplayThrust();
+        uiManager.DisplayShipyard(purchaseRepairShields, purchaseUpgradeShields, purchaseUpgradeThrust);
     }
     
     public void LeaveShipyard()
@@ -74,6 +80,4 @@ public class ShipyardManager : MonoBehaviour
             uiManager.UILeaveShipyard();
         }
     }
-
-
 }

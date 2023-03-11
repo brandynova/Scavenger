@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] WaveManager waveManager;
     [SerializeField] MineralManager mineralManager;
+    [SerializeField] PlayerController playerController;
 
     [SerializeField] public GameObject endWaveScreen;
     [SerializeField] public GameObject statusScreen;
@@ -18,26 +19,32 @@ public class UIManager : MonoBehaviour
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject gameOverScreen;
     [SerializeField] GameObject creditsScreen;
+    [SerializeField] GameObject instructionsScreen;
     
-    [SerializeField] TextMeshProUGUI shipyardCreditsText;
-    [SerializeField] TextMeshProUGUI shipyardMaxShieldsText;
-    [SerializeField] TextMeshProUGUI shipyardCurrShieldsText;
-    [SerializeField] TextMeshProUGUI repairText;
-    [SerializeField] TextMeshProUGUI enhanceText;
-
     [SerializeField] public Slider shieldSlider;
     [SerializeField] public Slider shipyardSlider;
-    [SerializeField] Button repairButton;
-    [SerializeField] Button enhanceButton;
+    [SerializeField] Button repairShieldsButton;
+    [SerializeField] Button upgradeShieldsButton;
+    [SerializeField] Button upgradeThrustButton;
 
     [SerializeField] TextMeshProUGUI creditsText;
     [SerializeField] TextMeshProUGUI shieldsText;
+    [SerializeField] TextMeshProUGUI thrustText;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] TextMeshProUGUI greenText;
     [SerializeField] TextMeshProUGUI purpleText;
     [SerializeField] TextMeshProUGUI blueText;
     [SerializeField] TextMeshProUGUI redText;
     [SerializeField] TextMeshProUGUI yellowText;
+
+    [SerializeField] TextMeshProUGUI shipyardCreditsText;
+    [SerializeField] TextMeshProUGUI shipyardThrustText;
+    [SerializeField] TextMeshProUGUI shipyardMaxShieldsText;
+    [SerializeField] TextMeshProUGUI shipyardCurrShieldsText;
+    [SerializeField] TextMeshProUGUI repairShieldsText;
+    [SerializeField] TextMeshProUGUI upgradeShieldsText;
+    [SerializeField] TextMeshProUGUI upgradeThrustText;
+
     [SerializeField] TextMeshProUGUI endWaveText;
     [SerializeField] TextMeshProUGUI finalScoreText;
 
@@ -57,21 +64,22 @@ public class UIManager : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
         mineralManager = GameObject.Find("Mineral Manager").GetComponent<MineralManager>();
-
+        playerController= GameObject.Find("Player").GetComponent<PlayerController>();
 
         titleScreen.gameObject.SetActive(true);
         statusScreen.gameObject.SetActive(false);
         endWaveScreen.gameObject.SetActive(false);
         gameOverScreen.gameObject.SetActive(false);
         creditsScreen.gameObject.SetActive(false);
+        instructionsScreen.gameObject.SetActive(false);
 
         screenCanvas = titleScreen.GetComponent<CanvasGroup>();
 
         shipyardScreen.gameObject.SetActive(true);
-        repairButton = GameObject.Find("Repair Button").GetComponent<Button>();
-        enhanceButton = GameObject.Find("Enhance Button").GetComponent<Button>();
+        repairShieldsButton = GameObject.Find("Repair Shields Button").GetComponent<Button>();
+        upgradeShieldsButton = GameObject.Find("Upgrade Shields Button").GetComponent<Button>();
+        upgradeThrustButton = GameObject.Find("Upgrade Thrust Button").GetComponent<Button>();
         shipyardScreen.gameObject.SetActive(false);
-        
 
         isScreenTransition = false;
     }
@@ -114,21 +122,21 @@ public class UIManager : MonoBehaviour
     // Called from GameManager 
     public void InitializeStatusScreen()
     {
-        shieldSlider.maxValue = gameManager.shieldHealth;
+        shieldSlider.maxValue = playerController.shieldHealth;
         shieldSlider.fillRect.gameObject.SetActive(true);
 
-        shipyardSlider.maxValue = gameManager.shieldHealth;
+        shipyardSlider.maxValue = playerController.shieldHealth;
         shipyardSlider.fillRect.gameObject.SetActive(true);
 
         mineralManager.InitializeMinerals();
         DisplayCredits(0);
+        DisplayThrust();
         DisplayShields();
         
         //creditsScreen.gameObject.SetActive(false);
         statusScreen.gameObject.SetActive(true);
     }
     
-             
 
     // Called from GameManager and UIManager
     public void DisplayMinerals()
@@ -157,9 +165,6 @@ public class UIManager : MonoBehaviour
         endWaveScreen.SetActive(true);
     }
 
-    
-    
-
     public void DisplayCredits(int credits)
     {
         creditsText.text = "Credits: " + credits;
@@ -167,43 +172,65 @@ public class UIManager : MonoBehaviour
 
     public void DisplayShields()
     {
-        shieldSlider.value = gameManager.shieldHealth;
-        shipyardSlider.value = gameManager.shieldHealth;
-        shieldsText.text = "Shields: " + gameManager.shieldHealth * 100;
+        shieldsText.text = "Shields: " + playerController.shieldHealth * 100;
+        shieldSlider.value = playerController.shieldHealth;
+        shipyardSlider.value = playerController.shieldHealth;
+    }
+
+    public void DisplayThrust()
+    {
+        thrustText.text = "Thrust: " + playerController.horizontalThrust * 10;
+        shipyardThrustText.text = "Thrust: " + playerController.horizontalThrust * 10;
     }
     
     // Called from Shipyard Manager
-     public void DisplayShipyard(int purchaseRepairs, int purchaseEnhance)
+     public void DisplayShipyard(int purchaseRepairShields, int purchaseUpgradeShields, int purchaseUpgradeThrust)
     {
         shipyardCreditsText.text = "Available Credits: " + gameManager.credits;
         shipyardMaxShieldsText.text = "Maxium Level: " + shieldSlider.maxValue * 100;
-        shipyardCurrShieldsText.text = "Current Level: " + gameManager.shieldHealth * 100;
-        shipyardSlider.value = gameManager.shieldHealth;
+        shipyardCurrShieldsText.text = "Current Level: " + playerController.shieldHealth * 100;
+        shipyardThrustText.text = "Thrust: " + playerController.horizontalThrust * 10;
+        shipyardSlider.value = playerController.shieldHealth;
 
-        repairText.text = purchaseRepairs + " credits";
-        enhanceText.text = purchaseEnhance + " credits";
+        repairShieldsText.text = purchaseRepairShields + " credits";
+        upgradeShieldsText.text = purchaseUpgradeShields + " credits";
+        upgradeThrustText.text = purchaseUpgradeThrust + " credits";
 
-        if (purchaseRepairs <= gameManager.credits && gameManager.shieldHealth < shieldSlider.maxValue)
+        //Repair Shields
+        if (purchaseRepairShields <= gameManager.credits && playerController.shieldHealth < shieldSlider.maxValue)
         {
-            repairButton.interactable = true;
-            repairText.alpha = 1f;
+            repairShieldsButton.interactable = true;
+            repairShieldsText.alpha = 1f;
 
         }
         else
         {
-            repairButton.interactable = false;
-            repairText.alpha = .4f;
+            repairShieldsButton.interactable = false;
+            repairShieldsText.alpha = .4f;
         }
         
-        if (purchaseEnhance <= gameManager.credits)
+        //Upgrade Shields
+        if (purchaseUpgradeShields <= gameManager.credits)
         {
-            enhanceButton.interactable = true;
-            enhanceText.alpha = 1f;
+            upgradeShieldsButton.interactable = true;
+            upgradeShieldsText.alpha = 1f;
         }
         else
         {
-            enhanceButton.interactable = false;
-            enhanceText.alpha = .4f;
+            upgradeShieldsButton.interactable = false;
+            upgradeShieldsText.alpha = .4f;
+        }
+        
+        //Upgrade Thrusters
+        if (purchaseUpgradeThrust <= gameManager.credits)
+        {
+            upgradeThrustButton.interactable = true;
+            upgradeThrustText.alpha = 1f;
+        }
+        else
+        {
+            upgradeThrustButton.interactable = false;
+            upgradeThrustText.alpha = .4f;
         }
         
         endWaveScreen.SetActive(false);
@@ -237,15 +264,21 @@ public class UIManager : MonoBehaviour
         pauseScreen.SetActive(toggle);
     }
 
+    // Called from Credits buttons on Title & Game Over Screens
     public void DisplayCreditsScreen()
     {
-        //if (player != null)
-        //{
-        //    player.SetActive(false);
-        //}
         titleScreen.gameObject.SetActive(false);
         gameOverScreen.gameObject.SetActive(false);  
         statusScreen.gameObject.SetActive(false);
         creditsScreen.gameObject.SetActive(true);
+    }
+
+    // Called from Instructions buttons on Title Screens
+    public void DisplayInstructionsScreen()
+    {
+        titleScreen.gameObject.SetActive(false);
+        gameOverScreen.gameObject.SetActive(false);  
+        statusScreen.gameObject.SetActive(false);
+        instructionsScreen.gameObject.SetActive(true);
     }
 }

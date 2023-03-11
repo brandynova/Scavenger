@@ -11,10 +11,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] WaveManager waveManager;
     [SerializeField] UIManager uiManager;
+    private PlayerController playerController;
     
     [SerializeField] GameObject player;
     
-    [SerializeField] public float shieldHealth;
     [SerializeField] public int difficulty;
     [SerializeField] public bool isGameActive;
     [SerializeField] public bool isPaused;
@@ -29,8 +29,6 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] public int credits;
 
-    private int maxDifficulty = 3;
-
 
     // Start is called before the first frame update
     void Start()
@@ -39,7 +37,6 @@ public class GameManager : MonoBehaviour
         waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
 
-        //gameAudio = GetComponent<AudioSource>();
         engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
         engineAudio.Play();
 
@@ -48,9 +45,10 @@ public class GameManager : MonoBehaviour
         
         player = GameObject.Find("Player");
         player.SetActive(true);
+        playerController= player.GetComponent<PlayerController>();
 
-        Time.timeScale = 0;
         isPaused = false; 
+        Time.timeScale = 0;
     }
 
     // Update is called once per frame
@@ -71,8 +69,8 @@ public class GameManager : MonoBehaviour
         isGameActive = true;
         player.SetActive(true);
         difficulty = playerDifficulty;
-        shieldHealth = maxDifficulty - difficulty + 1; // Shields can vary from 1 - 3 based on difficulty
 
+        playerController.InitializePlayer(difficulty);
         uiManager.InitializeStatusScreen();
         waveManager.InitializeWave();
         spawnManager.SpawnObjects();
@@ -91,7 +89,6 @@ public class GameManager : MonoBehaviour
             uiManager.DisplayCredits(credits);
         }
     }
-
 
     void TogglePause ()
     {
@@ -116,17 +113,13 @@ public class GameManager : MonoBehaviour
         }
     } 
    
+    // Called from PlayerController when player is destroyed
     public void GameOver()
     {
-        --shieldHealth;
-        uiManager.DisplayShields();
-        if (shieldHealth <= 0)
-        {
-            StartCoroutine(LaunchGameOver()); //launch the timer of destruction
-        }
+        StartCoroutine(LaunchGameOver()); //launch the timer of destruction
     }
 
-    // Wait for the indicated time, then destroy the player ship, then display Game Over screen with final score
+    // Wait for the indicated time, then destroy the player ship and display Game Over screen with final score
     IEnumerator LaunchGameOver() 
     {
         float destructionTime = 1.5f;
@@ -141,14 +134,14 @@ public class GameManager : MonoBehaviour
         isGameActive = false;
         Time.timeScale = 0;
     }
-
     
+    // Called from Restart buttons on Game Over & Credits screens
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
-   
-
+    
+    // Called from Exit buttons on Game Over & Credits screens
     public void ExitGame() 
     {
         Application.Quit();
