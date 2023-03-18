@@ -8,10 +8,12 @@ public class ShipyardManager : MonoBehaviour
     [SerializeField] WaveManager waveManager;
     [SerializeField] UIManager uiManager;
     [SerializeField] PlayerController playerController;
+    
+    private AudioSource engineAudio;
+    private AudioSource shipyardAudio;
 
     [SerializeField] GameObject player;
     
-    private Vector3 startPosition = new Vector3 (0f, -20f, 0f);
     private int upgradeThrustPrice = 15;
     private int repairShieldsPrice = 10;
     private int upgradeShieldsPrice = 20;
@@ -25,13 +27,20 @@ public class ShipyardManager : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
-        playerController= GameObject.Find("Player").GetComponent<PlayerController>();
-        
+
         player = GameObject.Find("Player");
+        playerController= player.GetComponent<PlayerController>();
+        
+        engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
+        shipyardAudio = GameObject.Find("Audio Shipyard SFX").GetComponent<AudioSource>();
+        shipyardAudio.Stop();
     }
         
     public void InitializeShipyard()
     {
+        shipyardAudio.Play();
+        engineAudio.Pause();
+
         purchaseRepairShields = repairShieldsPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
         purchaseUpgradeShields = upgradeShieldsPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
         purchaseUpgradeThrust = upgradeThrustPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
@@ -65,19 +74,5 @@ public class ShipyardManager : MonoBehaviour
         gameManager.UpdateCredits(-purchaseUpgradeThrust);
         uiManager.DisplayThrust();
         uiManager.DisplayShipyard(purchaseRepairShields, purchaseUpgradeShields, purchaseUpgradeThrust);
-    }
-    
-    public void LeaveShipyard()
-    {
-        if(player != null) // In case player was destroyed as the wave ended
-        {
-            player.SetActive(true);
-            player.transform.position = startPosition;
-
-            //gameMusic.Play();
-            gameManager.engineAudio.Play();
-
-            uiManager.UILeaveShipyard();
-        }
     }
 }

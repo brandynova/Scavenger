@@ -5,13 +5,18 @@ using UnityEngine;
 public class WaveManager : MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
+    [SerializeField] SpawnManager spawnManager;
     [SerializeField] UIManager uiManager;
-    [SerializeField] ShipyardManager shipyardManager;
+    [SerializeField] MusicManager musicManager;
     [SerializeField] GameObject player;
 
     [SerializeField] public int waveNumber;
     [SerializeField] public bool isEndWave;
     
+    private AudioSource gameMusic;
+    private AudioSource shipyardAudio;
+    private AudioSource engineAudio;
+
     private float waveInterval = 20f;
     private float waveTimer;
 
@@ -19,9 +24,14 @@ public class WaveManager : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
+        spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
-        shipyardManager = GameObject.Find("Shipyard Manager").GetComponent<ShipyardManager>();
+        musicManager = GameObject.Find("Game Music").GetComponent<MusicManager>();
         player = GameObject.Find("Player");
+        
+        gameMusic = GameObject.Find("Game Music").GetComponent<AudioSource>();
+        engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
+        shipyardAudio = GameObject.Find("Audio Shipyard SFX").GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -33,9 +43,8 @@ public class WaveManager : MonoBehaviour
             ProcessWaveTimer();
          }
     }
-
     
-    // Called from GameManager.StartGame
+    // Called from GameManager.StartGame to initialize the first wave
     public void InitializeWave()
     {
         isEndWave = false;
@@ -44,46 +53,47 @@ public class WaveManager : MonoBehaviour
         uiManager.DisplayWaveTimer(waveTimer);
     }
     
-    
     void ProcessWaveTimer()
     {
-        if (waveTimer <= 0) // Initiate next wave
+        if (waveTimer <= 0) // End of this wave
         {
             ++waveNumber;
             waveTimer = waveInterval * waveNumber * gameManager.difficulty; // increase the length of each subsequent wave based on difficulty 
             uiManager.DisplayWaveTimer(waveTimer);   
             EndWave();
         }
-        else
+        else // Display time left in this wave
         {
             waveTimer -= Time.deltaTime;
             uiManager.DisplayWaveTimer(waveTimer);
         }
     }
 
-
     void EndWave()
     {
+        float fadeTime = 3f;
+        
+        spawnManager.StopSpawning();
         if(gameManager.isGameActive && player != null)
         {
             isEndWave = true;
-            Time.timeScale = 0;
             player.SetActive(false);
-            //gameMusic.Pause();
-            gameManager.engineAudio.Pause();
+            gameManager.isPaused = true;
 
+            musicManager.StartFadeOut(fadeTime); // fade out game music at end of wave
+            
+            Time.timeScale = 0;
             DestroyRemainingObjects(); 
-
             uiManager.DisplayWaveScreen();
         }
-        else if(player == null)
+        else if(player == null) // In case player was destroyed as the wave ended
         {
             gameManager.GameOver();
         }
     }
 
     // Between waves, remove all objects (Asteroids, minerals, explosion effects, missiles)
-    // Called from WaveManager and from the Credits button on the Game Over screen
+    // Called from WaveManager when wave ends, and Game Manager when returning to Main Menu (title screen) on game over
     public void DestroyRemainingObjects()
     {
         GameObject[] asteroids = GameObject.FindGameObjectsWithTag("Asteroid");
@@ -114,8 +124,19 @@ public class WaveManager : MonoBehaviour
     // From Next Wave button on Shipyard Screen
     public void ContinueNextWave()
     {
+        float fadeTime = 10f;
+                
         Time.timeScale = 1;
+        shipyardAudio.Stop();
+        engineAudio.Play();
+        musicManager.StartFadeIn(fadeTime); // fade in game music at beginning of new wave
+        
+        player.transform.position = gameManager.playerStartPosition;
+        player.SetActive(true);
+
+        uiManager.UILeaveShipyard();
+        gameManager.isPaused = false;
         isEndWave = false;
-        shipyardManager.LeaveShipyard();                    
+        spawnManager.SpawnObjects(waveNumber);
     }
 }

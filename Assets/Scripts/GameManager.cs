@@ -11,23 +11,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] WaveManager waveManager;
     [SerializeField] UIManager uiManager;
-    private PlayerController playerController;
-    
+    [SerializeField] MusicManager musicManager;
+
     [SerializeField] GameObject player;
     
     [SerializeField] public int difficulty;
     [SerializeField] public bool isGameActive;
     [SerializeField] public bool isPaused;
+    
+    private PlayerController playerController;
 
-    [SerializeField] public AudioSource engineAudio;
-    //private AudioSource gameMusic;
-    private AudioSource gameAudio;
+    private AudioSource engineAudio;
+    private AudioSource gameMusicAudio;
     
     [SerializeField] public GameObject destroyAsteroidsVFX;
     [SerializeField] public AudioClip missedMineralSFX;
     [SerializeField] public List<AudioClip> destroyAsteroidsSFX;
     
     [SerializeField] public int credits;
+    [SerializeField] public Vector3 playerStartPosition = new Vector3 (0f, -20f, 0f);
 
 
     // Start is called before the first frame update
@@ -36,19 +38,20 @@ public class GameManager : MonoBehaviour
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
+        musicManager = GameObject.Find("Game Music").GetComponent<MusicManager>();
 
         engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
-        engineAudio.Play();
-
-        //gameMusic = GameObject.Find("Audio Game Music").GetComponent<AudioSource>();
-        //gameMusic.Play();
+        engineAudio.Stop();
+        
+        gameMusicAudio = GameObject.Find("Game Music").GetComponent<AudioSource>();
+        gameMusicAudio.Play();
         
         player = GameObject.Find("Player");
-        player.SetActive(true);
         playerController= player.GetComponent<PlayerController>();
+        player.SetActive(true);
 
-        isPaused = false; 
-        Time.timeScale = 0;
+        isPaused = true; 
+        //Time.timeScale = 0;
     }
 
     // Update is called once per frame
@@ -69,11 +72,12 @@ public class GameManager : MonoBehaviour
         isGameActive = true;
         player.SetActive(true);
         difficulty = playerDifficulty;
+        engineAudio.Play();
 
         playerController.InitializePlayer(difficulty);
         uiManager.InitializeStatusScreen();
         waveManager.InitializeWave();
-        spawnManager.SpawnObjects();
+        spawnManager.SpawnObjects(1);
     }
 
     // Called from ShipyardManager, MineralManager & ObjectBehaviour
@@ -96,8 +100,11 @@ public class GameManager : MonoBehaviour
         if (isPaused)
         {
             Time.timeScale = 0;
+
+            //Cursor.lockState = CursorLockMode.None;
+            //Cursor.visible = true;
             
-            //gameMusic.Pause();
+            gameMusicAudio.Pause();
             engineAudio.Pause();
 
             uiManager.TogglePauseScreen(true);
@@ -106,7 +113,10 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1;
 
-            //gameMusic.Play();
+            //Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.visible = false;
+
+            gameMusicAudio.Play();
             engineAudio.Play();
             
             uiManager.TogglePauseScreen(false);
@@ -116,32 +126,33 @@ public class GameManager : MonoBehaviour
     // Called from PlayerController when player is destroyed
     public void GameOver()
     {
+        spawnManager.StopSpawning();
         StartCoroutine(LaunchGameOver()); //launch the timer of destruction
     }
 
     // Wait for the indicated time, then destroy the player ship and display Game Over screen with final score
     IEnumerator LaunchGameOver() 
     {
-        float destructionTime = 1.5f;
-
-        yield return new WaitForSeconds(destructionTime); 
-        
-        engineAudio.Stop();
-        //gameMusic.Play();
-        
-        uiManager.DisplayGameOver();
+        float destructionTime = 1.75f;
+        float fadeTime = 5f;
         
         isGameActive = false;
+        yield return new WaitForSeconds(destructionTime); 
+
+        musicManager.StartFadeOut(fadeTime); // fade out game music
+        engineAudio.Stop();
         Time.timeScale = 0;
+        
+        uiManager.DisplayGameOver();
     }
     
-    // Called from Restart buttons on Game Over & Credits screens
+    // Called from Restart buttons on Game Over screen
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
-    // Called from Exit buttons on Game Over & Credits screens
+    // Called from Exit buttons on Game Over & Title screens
     public void ExitGame() 
     {
         Application.Quit();

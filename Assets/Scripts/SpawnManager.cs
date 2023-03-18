@@ -10,13 +10,14 @@ public class SpawnManager : MonoBehaviour
     
     [SerializeField] GameObject[] asteroids;
     [SerializeField] GameObject[] minerals;
-
-    [SerializeField] public float asteroidSpawnTime;
-
+    
     private float asteroidSpawnRate;
-    private float xRange = 30;
-    private float yPos = 40;
-    private float zPos = 0;
+    private float asteroidSpawnTime = 4f;
+    private float minSpawnRate = 0.25f;
+    private float xRange = 30f;
+    private float yPos = 40f;
+    private float zPos = 0f;
+
     private int randomIndex;
 
     // Start is called before the first frame update
@@ -26,10 +27,17 @@ public class SpawnManager : MonoBehaviour
         mineralManager = GameObject.Find("Mineral Manager").GetComponent<MineralManager>();
     }
 
-    // Called from GameManager
-    public void SpawnObjects()
+    // Called from Game Manager and Wave Manager
+    public void SpawnObjects(int waveNumber)
     {
-        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty;
+        Debug.Log("SpawnObjects waveNumber: " + waveNumber);
+        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty - (waveNumber - 1f) / (gameManager.difficulty * 2);
+        if (asteroidSpawnRate < minSpawnRate)
+        {
+            asteroidSpawnRate = minSpawnRate;
+        }
+        
+        Debug.Log("asteroidSpawnRate: " + asteroidSpawnRate);
         StartCoroutine(SpawnRandomAsteroid());
     }
 
@@ -45,6 +53,12 @@ public class SpawnManager : MonoBehaviour
 
             Instantiate(asteroids[randomIndex], spawnPos, asteroids[randomIndex].transform.rotation);
         }
+    }
+
+    // Called from Wave Manager and Game Manager
+    public void StopSpawning()
+    {
+        StopCoroutine(SpawnRandomAsteroid());
     }
 
     

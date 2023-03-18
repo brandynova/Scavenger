@@ -36,7 +36,7 @@ public class MineralManager : MonoBehaviour
     // Destroy the mineral and increment credits.  Called from PlayerController
     public void CollectMineral(GameObject mineral)
     {
-        if(gameManager.isGameActive)
+        if(gameManager.isGameActive && !gameManager.isPaused)
         {
                 int mineralValue = mineral.GetComponent<ObjectBehaviour>().value;
                 int mineralIndex = mineralValue - 1;
