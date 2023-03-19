@@ -27,7 +27,7 @@ public class PlayerController : MonoBehaviour
     private GameObject pooledMissile;
     
     private float horizontalInput;
-    private float xBounds = 31f;
+    private float xBounds = 33f;
     private float yOffset = 1.1f;
     private int maxDifficulty = 3;
 

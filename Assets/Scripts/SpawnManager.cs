@@ -30,14 +30,14 @@ public class SpawnManager : MonoBehaviour
     // Called from Game Manager and Wave Manager
     public void SpawnObjects(int waveNumber)
     {
-        Debug.Log("SpawnObjects waveNumber: " + waveNumber);
+        //Debug.Log("SpawnObjects waveNumber: " + waveNumber);
         asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty - (waveNumber - 1f) / (gameManager.difficulty * 2);
         if (asteroidSpawnRate < minSpawnRate)
         {
             asteroidSpawnRate = minSpawnRate;
         }
         
-        Debug.Log("asteroidSpawnRate: " + asteroidSpawnRate);
+        //Debug.Log("asteroidSpawnRate: " + asteroidSpawnRate);
         StartCoroutine(SpawnRandomAsteroid());
     }
 
