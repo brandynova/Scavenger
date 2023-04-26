@@ -52,9 +52,9 @@ public class PlayerController : MonoBehaviour
     }
 
     // Called from GameManager
-    public void InitializePlayer(int difficulty)
+    public void InitializePlayer()
     {
-        shieldHealth = maxDifficulty - difficulty + 1; // Shields can vary from 1 - 3 based on difficulty
+        shieldHealth = maxDifficulty - MainManager.Instance.gameDifficulty + 1; // Shields can vary from 1 - 3 based on difficulty
         horizontalThrust = 20.0f;
     }
 

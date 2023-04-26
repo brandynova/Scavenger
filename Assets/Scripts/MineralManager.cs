@@ -38,16 +38,16 @@ public class MineralManager : MonoBehaviour
     {
         if(gameManager.isGameActive && !gameManager.isPaused)
         {
-                int mineralValue = mineral.GetComponent<ObjectBehaviour>().value;
-                int mineralIndex = mineralValue - 1;
+            int mineralValue = mineral.GetComponent<ObjectBehaviour>().value;
+            int mineralIndex = mineralValue - 1;
     
-                gameAudio.PlayOneShot(collectMineralSFX, 1.0f);
+            gameAudio.PlayOneShot(collectMineralSFX, 1.0f);
                 
-                ++mineralCount[mineralIndex];
-                gameManager.UpdateCredits(mineralValue);
-                uiManager.DisplayMinerals();
+            ++mineralCount[mineralIndex];
+            gameManager.UpdateCredits(mineralValue);
+            uiManager.DisplayMinerals();
 
-                Destroy(mineral); 
+            Destroy(mineral); 
         }
     }
 }

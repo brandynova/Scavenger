@@ -39,7 +39,7 @@ public class ObjectBehaviour : MonoBehaviour
     // Set the speed of the object based on the difficulty selected by the user
     void LaunchObject()
     {
-        float objectSpeed = speed + gameManager.difficulty * (gameManager.difficulty + 1);
+        float objectSpeed = speed + MainManager.Instance.gameDifficulty * (MainManager.Instance.gameDifficulty + 1);
         objectRb.velocity = new Vector3(0, -objectSpeed, 0); 
     }
     
@@ -53,7 +53,7 @@ public class ObjectBehaviour : MonoBehaviour
         // Destroy the object if it travels outside the game boundary.  Deduct the score value of the object from the total score when playing on HARD difficulty
         if (transform.position.y < yBounds)
         {
-            if (gameManager.difficulty == maxDifficulty && gameObject.CompareTag("Mineral") )
+            if (MainManager.Instance.gameDifficulty == maxDifficulty && gameObject.CompareTag("Mineral") )
             {
                 DeductMissedMineral();
             }

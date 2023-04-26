@@ -1,28 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
+#if UNITY_EDITOR
+    using UnityEditor;
+#endif
 
-// Scavenger Lite
+// Scavenger v2
 public class GameManager : MonoBehaviour
 {
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] WaveManager waveManager;
+    [SerializeField] MineralManager mineralManager;
     [SerializeField] UIManager uiManager;
-    [SerializeField] MusicManager musicManager;
 
     [SerializeField] GameObject player;
     
-    [SerializeField] public int difficulty;
     [SerializeField] public bool isGameActive;
     [SerializeField] public bool isPaused;
     
     private PlayerController playerController;
 
+    private AudioSource sfxAudio;
     private AudioSource engineAudio;
-    private AudioSource gameMusicAudio;
     
     [SerializeField] public GameObject destroyAsteroidsVFX;
     [SerializeField] public AudioClip missedMineralSFX;
@@ -31,27 +32,29 @@ public class GameManager : MonoBehaviour
     [SerializeField] public int credits;
     [SerializeField] public Vector3 playerStartPosition = new Vector3 (0f, -20f, 0f);
 
-
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         waveManager = GameObject.Find("Wave Manager").GetComponent<WaveManager>();
+        mineralManager = GameObject.Find("Mineral Manager").GetComponent<MineralManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
-        musicManager = GameObject.Find("Game Music").GetComponent<MusicManager>();
+        
+        sfxAudio = GetComponent<AudioSource>();
+        sfxAudio.volume = MusicManager.Instance.gameMusic.volume;
 
         engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
+        engineAudio.volume  = MusicManager.Instance.gameMusic.volume;
         engineAudio.Stop();
-        
-        gameMusicAudio = GameObject.Find("Game Music").GetComponent<AudioSource>();
-        gameMusicAudio.Play();
-        
+                
         player = GameObject.Find("Player");
         playerController= player.GetComponent<PlayerController>();
         player.SetActive(true);
 
-        isPaused = true; 
-        //Time.timeScale = 0;
+        Time.timeScale = 1;
+
+        //Debug.Log("GameManager is Awake.  TimeScale set to " + Time.timeScale);
+        StartGame();
     }
 
     // Update is called once per frame
@@ -64,17 +67,17 @@ public class GameManager : MonoBehaviour
          }   
     }
 
-    // Called from DifficultyControl
-    public void StartGame(int playerDifficulty)
+    // Called from UIManager.TransitionScreen
+    public void StartGame()
     {
         credits = 0;
+        MainManager.Instance.finalScore = 0;
         isPaused = false;  
         isGameActive = true;
         player.SetActive(true);
-        difficulty = playerDifficulty;
         engineAudio.Play();
 
-        playerController.InitializePlayer(difficulty);
+        playerController.InitializePlayer();
         uiManager.InitializeStatusScreen();
         waveManager.InitializeWave();
         spawnManager.SpawnObjects(1);
@@ -87,10 +90,12 @@ public class GameManager : MonoBehaviour
         {
             if (addToCredits > 0)
             {
-                addToCredits += (difficulty - 1);
+                addToCredits += (MainManager.Instance.gameDifficulty - 1);
             }
             credits += addToCredits;
             uiManager.DisplayCredits(credits);
+            CalculateScore();
+            uiManager.DisplayScore();
         }
     }
 
@@ -101,10 +106,8 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 0;
 
-            //Cursor.lockState = CursorLockMode.None;
-            //Cursor.visible = true;
-            
-            gameMusicAudio.Pause();
+            MusicManager.Instance.PauseGameMusic();
+            //gameMusicAudio.Pause();
             engineAudio.Pause();
 
             uiManager.TogglePauseScreen(true);
@@ -113,10 +116,9 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1;
 
-            //Cursor.lockState = CursorLockMode.Locked;
-            //Cursor.visible = false;
-
-            gameMusicAudio.Play();
+            
+            MusicManager.Instance.PlayGameMusic();
+            //gameMusicAudio.Play();
             engineAudio.Play();
             
             uiManager.TogglePauseScreen(false);
@@ -134,27 +136,64 @@ public class GameManager : MonoBehaviour
     IEnumerator LaunchGameOver() 
     {
         float destructionTime = 1.75f;
-        float fadeTime = 5f;
         
         isGameActive = false;
         yield return new WaitForSeconds(destructionTime); 
 
-        musicManager.StartFadeOut(fadeTime); // fade out game music
+        MusicManager.Instance.StartFadeOut(); // fade out game music
         engineAudio.Stop();
         Time.timeScale = 0;
-        
+
+        CalculateScore();
         uiManager.DisplayGameOver();
+
+        MainManager.Instance.SavePlayerData();
     }
     
-    // Called from Restart buttons on Game Over screen
-    public void RestartGame()
+    public void CalculateScore()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        int mineralScore = 0;
+        int difficultyAdjustment = 1;
+
+        switch(MainManager.Instance.gameDifficulty)
+        {
+            case 1:
+                difficultyAdjustment = 1;
+                break;
+            case 2:
+                difficultyAdjustment = 2;
+                break;
+            case 3:
+                difficultyAdjustment = 3;
+                break;
+        }
+            
+        for (int i = 0; i < mineralManager.mineralCount.Count; ++i)
+        {
+            mineralScore += mineralManager.mineralCount[i] * (i + 1);
+        }
+        MainManager.Instance.finalScore = (mineralScore + waveManager.waveNumber + credits) * difficultyAdjustment;
+        MainManager.Instance.finalWave = waveManager.waveNumber;
+    }
+
+
+    // Called from Main Menu button on Game Over screen
+    public void LoadMainMenu()
+    {
+        //SceneManager.LoadScene(0);
+        MainManager.Instance.LoadScene(0);
     }
     
-    // Called from Exit buttons on Game Over & Title screens
-    public void ExitGame() 
+    // Called from the Exit button on the Menu 
+    public void Exit()
     {
-        Application.Quit();
+        // Exit the Unity Player if running the editor, otherwise exit the application 
+        #if UNITY_EDITOR
+            //Debug.Log("Exiting playmode");
+            EditorApplication.ExitPlaymode();
+        #else
+            //Debug.Log("Quitting the application");
+            Application.Quit();
+        #endif
     }
 }

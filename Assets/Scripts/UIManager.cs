@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
+// Scavenger v2
 public class UIManager : MonoBehaviour
 {
     [SerializeField] GameManager gameManager;
@@ -14,12 +15,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] public GameObject endWaveScreen;
     [SerializeField] public GameObject statusScreen;
     
-    [SerializeField] GameObject titleScreen;
     [SerializeField] GameObject shipyardScreen;
     [SerializeField] GameObject pauseScreen;
     [SerializeField] GameObject gameOverScreen;
-    [SerializeField] GameObject creditsScreen;
-    [SerializeField] GameObject instructionsScreen;
+    [SerializeField] GameObject congratsFields;
+    [SerializeField] GameObject newScoreFields;
     
     [SerializeField] public Slider shieldSlider;
     [SerializeField] public Slider shipyardSlider;
@@ -27,6 +27,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] Button upgradeShieldsButton;
     [SerializeField] Button upgradeThrustButton;
 
+    [SerializeField] TextMeshProUGUI pilotNameText;
+    [SerializeField] TextMeshProUGUI scoreText;
     [SerializeField] TextMeshProUGUI creditsText;
     [SerializeField] TextMeshProUGUI shieldsText;
     [SerializeField] TextMeshProUGUI thrustText;
@@ -37,6 +39,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI redText;
     [SerializeField] TextMeshProUGUI yellowText;
 
+    [SerializeField] TextMeshProUGUI shipyardNameText;
     [SerializeField] TextMeshProUGUI shipyardCreditsText;
     [SerializeField] TextMeshProUGUI shipyardThrustText;
     [SerializeField] TextMeshProUGUI shipyardMaxShieldsText;
@@ -47,24 +50,15 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI waveTextValue;
     [SerializeField] TextMeshProUGUI waveShadowValue;
-    [SerializeField] TextMeshProUGUI ScoreValueText;
-    [SerializeField] TextMeshProUGUI ScoreValueShadow;
+    [SerializeField] TextMeshProUGUI finalScoreText;
+    [SerializeField] TextMeshProUGUI finalScoreShadow;
+    [SerializeField] TextMeshProUGUI previousHighScoreValue;
+
     
     [SerializeField] GameObject player;
 
-    private CanvasGroup screenCanvas;
-
-    private float currentAlpha;
-    private float desiredAlpha;
-    private float fadeTime = 1f;
     private float alphaMax = 1f;
     private float alphaFade = .1f;
-    private float alphaMin = 0f;
-
-    private int difficulty;
-
-    private bool isScreenTransition;
-
 
     void Start()
     {
@@ -75,53 +69,13 @@ public class UIManager : MonoBehaviour
         player = GameObject.Find("Player");
         playerController = player.GetComponent<PlayerController>();
 
-        screenCanvas = titleScreen.GetComponent<CanvasGroup>();
-
         shipyardScreen.gameObject.SetActive(true);
         repairShieldsButton = GameObject.Find("Repair Shields Button").GetComponent<Button>();
         upgradeShieldsButton = GameObject.Find("Upgrade Shields Button").GetComponent<Button>();
         upgradeThrustButton = GameObject.Find("Upgrade Thrust Button").GetComponent<Button>();
         shipyardScreen.gameObject.SetActive(false);
-
-        isScreenTransition = false;
-
-        DisplayTitleScreen(); // Display the Main Menu to get the game started
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-         // Check if the title screen is being faded out (start of game only)
-         if (isScreenTransition)
-         {
-            TransitionScreen();
-         }
-    }
-
-    
-    // Called from DifficultyControl, once the player selects a difficulty level from the Main Menu
-    public void StartScreenTransition(int playerDifficulty)
-    {
-        difficulty = playerDifficulty;
-        isScreenTransition = true;
-        currentAlpha = alphaMax;
-        desiredAlpha = alphaMin;
-        Time.timeScale = 1;
-    }
-    
-    void TransitionScreen()
-    {
-        currentAlpha = Mathf.MoveTowards(currentAlpha, desiredAlpha, fadeTime * Time.deltaTime);
-        screenCanvas.alpha = currentAlpha;
-        if (currentAlpha == desiredAlpha)
-        { 
-            isScreenTransition = false;  
-            titleScreen.gameObject.SetActive(false);
-            screenCanvas.alpha = alphaMax;
-            gameManager.StartGame(difficulty);
-        }
-    }    
-    
     
     // Called from GameManager 
     public void InitializeStatusScreen()
@@ -133,22 +87,24 @@ public class UIManager : MonoBehaviour
         shipyardSlider.fillRect.gameObject.SetActive(true);
 
         mineralManager.InitializeMinerals();
+
+        DisplayPilotName();
         DisplayCredits(0);
         DisplayThrust();
         DisplayShields();
+        DisplayScore();
         
         statusScreen.gameObject.SetActive(true);
     }
     
-
     // Called from GameManager and UIManager
     public void DisplayMinerals()
     {
-        greenText.text = mineralManager.mineralName[0] + mineralManager.mineralCount[0];
-        purpleText.text = mineralManager.mineralName[1] + mineralManager.mineralCount[1];
-        blueText.text = mineralManager.mineralName[2] + mineralManager.mineralCount[2];
-        redText.text = mineralManager.mineralName[3] + mineralManager.mineralCount[3];
-        yellowText.text = mineralManager.mineralName[4] + mineralManager.mineralCount[4];
+        greenText.text = mineralManager.mineralCount[0].ToString();
+        purpleText.text = mineralManager.mineralCount[1].ToString();
+        blueText.text = mineralManager.mineralCount[2].ToString();
+        redText.text = mineralManager.mineralCount[3].ToString();
+        yellowText.text = mineralManager.mineralCount[4].ToString();
     }
     
     // Called from WaveManager
@@ -169,9 +125,19 @@ public class UIManager : MonoBehaviour
         endWaveScreen.SetActive(true);
     }
 
+    private void DisplayPilotName()
+    {
+        pilotNameText.text = MainManager.Instance.pilotName;
+    }
+
     public void DisplayCredits(int credits)
     {
         creditsText.text = "Credits: " + credits;
+    }
+
+    public void DisplayScore()
+    {
+        scoreText.text = "Score: " + MainManager.Instance.finalScore;
     }
 
     public void DisplayShields()
@@ -190,7 +156,8 @@ public class UIManager : MonoBehaviour
     // Called from Shipyard Manager
      public void DisplayShipyard(int purchaseRepairShields, int purchaseUpgradeShields, int purchaseUpgradeThrust)
     {
-        shipyardCreditsText.text = "Available Credits: " + gameManager.credits;
+        shipyardNameText.text = MainManager.Instance.pilotName;
+        shipyardCreditsText.text = "Credits: " + gameManager.credits;
         shipyardMaxShieldsText.text = "Maxium Level: " + shieldSlider.maxValue * 100;
         shipyardCurrShieldsText.text = "Current Level: " + playerController.shieldHealth * 100;
         shipyardThrustText.text = "Thrust: " + playerController.horizontalThrust * 10;
@@ -251,17 +218,60 @@ public class UIManager : MonoBehaviour
     // Called from GameManager when player is killed
     public void DisplayGameOver()
     {
-        int mineralScore = 0;
-        int finalScore;
-
-        for (int i = 0; i < mineralManager.mineralCount.Count; ++i)
-        {
-            mineralScore += mineralManager.mineralCount[i] * (i + 1);
-        }
         gameOverScreen.gameObject.SetActive(true);  
-        finalScore = (mineralScore + waveManager.waveNumber)*gameManager.difficulty + gameManager.credits;
-        ScoreValueText.text = "\n" + finalScore;
-        ScoreValueShadow.text = "\n" + finalScore;
+
+        string formattedScore = MainManager.Instance.FormatScore(MainManager.Instance.finalScore);
+
+        finalScoreText.text = "\n" + formattedScore;
+        finalScoreShadow.text = "\n" + formattedScore;
+        
+        congratsFields.SetActive(false);
+        newScoreFields.SetActive(false);
+
+        switch(MainManager.Instance.gameDifficulty)
+        {
+            case 1: //EASY
+                if(MainManager.Instance.finalScore > MainManager.Instance.highScore1)
+                {
+                    //Display High Score kudos unless this is the first high score
+                    if(!string.IsNullOrEmpty(MainManager.Instance.highScoreName1))
+                    {
+                        congratsFields.SetActive(true);
+                        previousHighScoreValue.text = "\n" + MainManager.Instance.FormatScore(MainManager.Instance.highScore1) + " by " + MainManager.Instance.highScoreName1;
+                    }
+                    else
+                        newScoreFields.SetActive(true);
+                }
+                break;
+
+            case 2: //NORMAL
+                if(MainManager.Instance.finalScore > MainManager.Instance.highScore2)
+                {
+                    //Display High Score kudos unless this is the first high score
+                    if(!string.IsNullOrEmpty(MainManager.Instance.highScoreName2))
+                    {
+                        congratsFields.SetActive(true);
+                        previousHighScoreValue.text = "\n" + MainManager.Instance.FormatScore(MainManager.Instance.highScore2) + " by " + MainManager.Instance.highScoreName2;
+                    }
+                    else
+                        newScoreFields.SetActive(true);
+                }
+                break;
+
+            case 3: //HARD
+                if(MainManager.Instance.finalScore > MainManager.Instance.highScore3)
+                {
+                    //Display High Score kudos unless this is the first high score
+                    if(!string.IsNullOrEmpty(MainManager.Instance.highScoreName3))
+                    {
+                        congratsFields.SetActive(true);
+                        previousHighScoreValue.text = "\n" + MainManager.Instance.FormatScore(MainManager.Instance.highScore3) + " by " + MainManager.Instance.highScoreName3;
+                    }
+                    else
+                        newScoreFields.SetActive(true);
+                }
+                break;
+        }
     }
     
 
@@ -269,44 +279,5 @@ public class UIManager : MonoBehaviour
     public void TogglePauseScreen(bool toggle)
     {
         pauseScreen.SetActive(toggle);
-    }
-
-
-    // Display the Main Menu (title screen)
-    // Called from Start in UIManager and from the Back buttons on Credits and Instructions screens (off Main Menu)
-    public void DisplayTitleScreen()
-    {
-        if (player != null)
-        {
-            player.SetActive(true);
-        }
-        statusScreen.gameObject.SetActive(false);
-        endWaveScreen.gameObject.SetActive(false);
-        gameOverScreen.gameObject.SetActive(false);
-        creditsScreen.gameObject.SetActive(false);
-        instructionsScreen.gameObject.SetActive(false);
-        titleScreen.gameObject.SetActive(true);
-    }
-
-    // Called from Credits buttons on Main Menu (title screen)
-    public void DisplayCreditsScreen()
-    {
-        if (player != null)
-        {
-            player.SetActive(false);
-        }
-        titleScreen.gameObject.SetActive(false);
-        creditsScreen.gameObject.SetActive(true);
-    }
-
-    // Called from Instructions buttons on Main Menu (title screen)
-    public void DisplayInstructionsScreen()
-    {
-        if (player != null)
-        {
-            player.SetActive(false);
-        }
-        titleScreen.gameObject.SetActive(false);
-        instructionsScreen.gameObject.SetActive(true);
     }
 }

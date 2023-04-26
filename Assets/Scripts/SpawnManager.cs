@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
     public void SpawnObjects(int waveNumber)
     {
         //Debug.Log("SpawnObjects waveNumber: " + waveNumber);
-        asteroidSpawnRate = asteroidSpawnTime / gameManager.difficulty - (waveNumber - 1f) / (gameManager.difficulty * 2);
+        asteroidSpawnRate = asteroidSpawnTime / MainManager.Instance.gameDifficulty - (waveNumber - 1f) / (MainManager.Instance.gameDifficulty * 2);
         if (asteroidSpawnRate < minSpawnRate)
         {
             asteroidSpawnRate = minSpawnRate;
@@ -73,7 +73,7 @@ public class SpawnManager : MonoBehaviour
     // Generate one or more minerals when an asteroid is destroyed by a missile.  Called from PlayerController
     public void GenerateMinerals(Vector3 position)
     {
-        int spawnMaxMinerals = (int) Mathf.Round((mineralManager.mineralCount.Count + 1)/gameManager.difficulty);
+        int spawnMaxMinerals = (int) Mathf.Round((mineralManager.mineralCount.Count + 1)/MainManager.Instance.gameDifficulty);
         int amountToSpawn = Random.Range(0, spawnMaxMinerals);
 
         for (int i = 0; i < amountToSpawn; i++)

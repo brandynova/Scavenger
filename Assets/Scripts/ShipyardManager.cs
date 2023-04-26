@@ -33,6 +33,7 @@ public class ShipyardManager : MonoBehaviour
         
         engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
         shipyardAudio = GameObject.Find("Audio Shipyard SFX").GetComponent<AudioSource>();
+        shipyardAudio.volume = MusicManager.Instance.gameMusic.volume;
         shipyardAudio.Stop();
     }
         
@@ -41,9 +42,9 @@ public class ShipyardManager : MonoBehaviour
         shipyardAudio.Play();
         engineAudio.Pause();
 
-        purchaseRepairShields = repairShieldsPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
-        purchaseUpgradeShields = upgradeShieldsPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
-        purchaseUpgradeThrust = upgradeThrustPrice * gameManager.difficulty * (waveManager.waveNumber - 1);
+        purchaseRepairShields = repairShieldsPrice * MainManager.Instance.gameDifficulty * (waveManager.waveNumber - 1);
+        purchaseUpgradeShields = upgradeShieldsPrice * MainManager.Instance.gameDifficulty * (waveManager.waveNumber - 1);
+        purchaseUpgradeThrust = upgradeThrustPrice * MainManager.Instance.gameDifficulty * (waveManager.waveNumber - 1);
         uiManager.DisplayShipyard(purchaseRepairShields, purchaseUpgradeShields, purchaseUpgradeThrust);
     }
 

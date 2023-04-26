@@ -7,13 +7,11 @@ public class WaveManager : MonoBehaviour
     [SerializeField] GameManager gameManager;
     [SerializeField] SpawnManager spawnManager;
     [SerializeField] UIManager uiManager;
-    [SerializeField] MusicManager musicManager;
     [SerializeField] GameObject player;
 
     [SerializeField] public int waveNumber;
     [SerializeField] public bool isEndWave;
     
-    private AudioSource gameMusic;
     private AudioSource shipyardAudio;
     private AudioSource engineAudio;
 
@@ -26,10 +24,8 @@ public class WaveManager : MonoBehaviour
         gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         spawnManager = GameObject.Find("Spawn Manager").GetComponent<SpawnManager>();
         uiManager = GameObject.Find("UI Manager").GetComponent<UIManager>();
-        musicManager = GameObject.Find("Game Music").GetComponent<MusicManager>();
         player = GameObject.Find("Player");
         
-        gameMusic = GameObject.Find("Game Music").GetComponent<AudioSource>();
         engineAudio = GameObject.Find("Audio Engine SFX").GetComponent<AudioSource>();
         shipyardAudio = GameObject.Find("Audio Shipyard SFX").GetComponent<AudioSource>();
     }
@@ -58,7 +54,7 @@ public class WaveManager : MonoBehaviour
         if (waveTimer <= 0) // End of this wave
         {
             ++waveNumber;
-            waveTimer = waveInterval * waveNumber * gameManager.difficulty; // increase the length of each subsequent wave based on difficulty 
+            waveTimer = waveInterval * waveNumber * MainManager.Instance.gameDifficulty; // increase the length of each subsequent wave based on difficulty 
             uiManager.DisplayWaveTimer(waveTimer);   
             EndWave();
         }
@@ -71,7 +67,7 @@ public class WaveManager : MonoBehaviour
 
     void EndWave()
     {
-        float fadeTime = 3f;
+        //float fadeTime = 3f;
         
         spawnManager.StopSpawning();
         if(gameManager.isGameActive && player != null)
@@ -80,7 +76,7 @@ public class WaveManager : MonoBehaviour
             player.SetActive(false);
             gameManager.isPaused = true;
 
-            musicManager.StartFadeOut(fadeTime); // fade out game music at end of wave
+            MusicManager.Instance.StartFadeOut(); // fade out game music at end of wave
             
             Time.timeScale = 0;
             DestroyRemainingObjects(); 
@@ -124,12 +120,12 @@ public class WaveManager : MonoBehaviour
     // From Next Wave button on Shipyard Screen
     public void ContinueNextWave()
     {
-        float fadeTime = 10f;
+        //float fadeTime = 10f;
                 
         Time.timeScale = 1;
         shipyardAudio.Stop();
         engineAudio.Play();
-        musicManager.StartFadeIn(fadeTime); // fade in game music at beginning of new wave
+        MusicManager.Instance.StartFadeIn(); // fade in game music at beginning of new wave
         
         player.transform.position = gameManager.playerStartPosition;
         player.SetActive(true);
